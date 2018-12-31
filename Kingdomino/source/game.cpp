@@ -1,20 +1,15 @@
 #include "game.hpp"
 #include <time.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_mixer.h>
 
 static u32 score;
 
-void Game::init(void)
+void Game::init(SDL_Renderer* renderer)
 {
   score = 0;
   Board player1Board = Board(1);
   Board player2Board = Board(2);
-  player1Board.displayBoard();
-  player2Board.displayBoard();
+  player1Board.displayBoard(renderer);
+  player2Board.displayBoard(renderer);
 }
 
 void Game::scanInput(void)

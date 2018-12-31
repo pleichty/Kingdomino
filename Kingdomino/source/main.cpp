@@ -68,15 +68,7 @@ Domino stack[48] = {
   ,Domino(Tile(Terrain::wheat, 0),Tile(Terrain::mine, 3),48)
 };
 
-void initGraphics(){
-  SDL_Init(SDL_INIT_EVERYTHING);
-  IMG_Init(IMG_INIT_PNG);
-  TTF_Init();
-  romfsInit();
-
-  // Create an SDL window & renderer
-  SDL_Window* window = SDL_CreateWindow("Main-Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP);
-  SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+void initGraphics(SDL_Renderer* renderer){
 
   // Create bg texture:
   SDL_Surface* bg_surface = IMG_Load("romfs:/resources/images/background.png");			// Read image as surface
@@ -115,8 +107,16 @@ void initGraphics(){
 
 int main(int argc, char** argv)
 {
-  initGraphics();
+  SDL_Init(SDL_INIT_EVERYTHING);
+  IMG_Init(IMG_INIT_PNG);
+  TTF_Init();
+  romfsInit();
 
+  // Create an SDL window & renderer
+  SDL_Window* window = SDL_CreateWindow("Main-Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP);
+  SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+
+  initGraphics(renderer);
   //determine where to start in the domino stack
   int tileCounter = 1;
   int tileNumbers[48];
@@ -129,7 +129,7 @@ int main(int argc, char** argv)
   std::srand(std::time(0));
   random_shuffle(std::begin(tileNumbers), std::end(tileNumbers));
 
-  Game::init();
+  Game::init(renderer);
 
   while(appletMainLoop())
   {

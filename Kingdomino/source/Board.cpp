@@ -29,7 +29,7 @@ void Board::placeDomino(Domino domino, int x, int y, Direction direction){
   }
 }
 
-void Board::displayBoard(){
+void Board::displayBoard(SDL_Renderer* renderer){
   int startx = 100;
   int starty;
   printf("player %d \n", player);
@@ -42,7 +42,7 @@ void Board::displayBoard(){
   }
   for(int x=0; x< 5; x++){
     for(int y=0;y<5;y++){
-        tileArr[x][y].printTile(x,y,startx,starty);
+        tileArr[x][y].printTile(renderer,x,y,startx,starty,player);
     }
   }
 }

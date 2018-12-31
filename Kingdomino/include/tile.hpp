@@ -6,10 +6,12 @@
 #include <string>
 #include <iostream>
 
-extern const u32 g_l;
-extern const u32 g_spacing;
-extern const u32 g_xstart;
-extern const u32 g_ystart;
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_events.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
+
 using namespace std;
 
 enum class Terrain{forest,grass,wheat,water,mine,swamp,wild,empty};
@@ -25,6 +27,7 @@ public:
       terrain = t;
       crownCount = cc;
     }
+
     Terrain getTerrain(){
       return terrain;
     };
@@ -32,46 +35,49 @@ public:
     int getCrownCount(){
       return crownCount;
     };
-    void show(u8 i, u8 j);
 
-    void printTile(){
-      switch(terrain){
-          case Terrain::empty:
-            cout <<"[   empty   ]";
-          break;
+    void printTile(SDL_Renderer* renderer,int x, int y, int startx, int starty,int player){
+      //create texture for starting tiles
+      SDL_Surface* tileSurface;
 
-          case Terrain::wild:
-            cout <<"[   wild    ]";
-          break;
+      SDL_Rect tileDestination;
+      tileDestination.x = startx + (x * 100);
+      tileDestination.y = starty + (y * 100);
+      tileDestination.w = 100;
+      tileDestination.h = 100;
 
-          case Terrain::grass:
-            cout <<"[grass  - " <<  crownCount << "]";
-          break;
+      if(terrain == Terrain::wild && player == 1){
+        tileSurface = IMG_Load("romfs:/resources/images/startingTile1.png");
+      }
+      else if(terrain == Terrain::wild && player == 2){
+        tileSurface = IMG_Load("romfs:/resources/images/startingTile2.png");
+      }
+      else if(terrain == Terrain::grass){
+        tileSurface = IMG_Load("romfs:/resources/images/grassTile.png");
+      }
+      else if(terrain == Terrain::forest){
+        tileSurface = IMG_Load("romfs:/resources/images/forestTile.png");
+      }
+      else if(terrain == Terrain::wheat){
+        tileSurface = IMG_Load("romfs:/resources/images/wheatTile.png");
+      }
+      else if(terrain == Terrain::water){
+        tileSurface = IMG_Load("romfs:/resources/images/waterTile.png");
+      }
+      else if(terrain == Terrain::mine){
+        tileSurface = IMG_Load("romfs:/resources/images/mineTile.png");
+      }
+      else if(terrain == Terrain::swamp){
+        tileSurface = IMG_Load("romfs:/resources/images/swampTile.png");
+      }
+      //empty
+      else{
+        tileSurface = IMG_Load("romfs:/resources/images/emptyTile.png");
+      }
+    SDL_Texture* tileTexture = SDL_CreateTextureFromSurface(renderer, tileSurface);
 
-          case Terrain::forest:
-            cout << "[forest - " <<  crownCount << "]";
-          break;
-
-          case Terrain::wheat:
-            cout <<"[wheat - " <<  crownCount << "]";
-          break;
-
-          case Terrain::water:
-            cout << "[water - "<<  crownCount << "]";
-          break;
-
-          case Terrain::mine:
-            cout << "[mine - " <<  crownCount << "]";
-          break;
-
-          case Terrain::swamp:
-            cout << "[swamp - " <<  crownCount << "]";
-          break;
-
-          default:
-            cout <<"[   no   ]";
-          break;
-    }
+    // Copy bg texture to renderer:
+    SDL_RenderCopy(renderer, tileTexture, NULL, &tileDestination);
   }
 
 private:

@@ -7,6 +7,12 @@
 #include "domino.hpp"
 #include "direction.hpp"
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_events.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
+
 using namespace std;
 
 class Board
@@ -17,7 +23,7 @@ public:
 
   bool canPlaceDomino(Domino domino, int x, int y, Direction direction);
 
-  void displayBoard();
+  void displayBoard(SDL_Renderer* renderer);
 
   int calculateScore();
 
