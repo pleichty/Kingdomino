@@ -1,16 +1,12 @@
 #include "game.hpp"
 #include <time.h>
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_events.h>
 #include <SDL2/SDL_image.h>
-
-const u32 g_l = 96;
-const u32 g_spacing = 16;
-const u32 g_xstart = ceil((1280 - g_l*4 - g_spacing*3) / 2);
-const u32 g_ystart = ceil((720 - g_l*4 - g_spacing*3) / 2);
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
 
 static u32 score;
-
 
 void Game::init(void)
 {
@@ -19,17 +15,6 @@ void Game::init(void)
   Board player2Board = Board(2);
   player1Board.displayBoard();
   player2Board.displayBoard();
-
-
-
-    //create dominos
-
-    //loop
-    //randomly pick 4 dominos
-    //player makes selection
-    //put selection in board
-    //loop
-
 }
 
 void Game::scanInput(void)
@@ -50,12 +35,5 @@ bool Game::gameOver(void)
 
 void Game::show(void)
 {
-    // background
-  //  g_framebuf = gfxGetFramebuffer(&g_framebufWidth, NULL);
-  //  memset(g_framebuf, 250, gfxGetFramebufferSize());
 
-
-    //gfxFlushBuffers();
-    //gfxSwapBuffers();
-    //gfxWaitForVsync();
 }

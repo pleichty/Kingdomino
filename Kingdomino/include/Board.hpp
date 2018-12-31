@@ -7,11 +7,6 @@
 #include "domino.hpp"
 #include "direction.hpp"
 
-extern const u32 g_l;
-extern const u32 g_spacing;
-extern const u32 g_xstart;
-extern const u32 g_ystart;
-
 using namespace std;
 
 class Board
