@@ -68,9 +68,7 @@ Domino stack[48] = {
   ,Domino(Tile(Terrain::wheat, 0),Tile(Terrain::mine, 3),48)
 };
 
-int main(int argc, char** argv)
-{
-
+void initGraphics(){
   SDL_Init(SDL_INIT_EVERYTHING);
   IMG_Init(IMG_INIT_PNG);
   TTF_Init();
@@ -107,14 +105,17 @@ int main(int argc, char** argv)
 
 
   // Copy bg texture to renderer:
-	SDL_RenderCopy(renderer, bg_texture, NULL, NULL);
-	SDL_RenderCopy(renderer, startingTile1Texture, NULL, &destinationTile1);
-	SDL_RenderCopy(renderer, startingTile2Texture, NULL, &destinationTile2);
+  SDL_RenderCopy(renderer, bg_texture, NULL, NULL);
+  SDL_RenderCopy(renderer, startingTile1Texture, NULL, &destinationTile1);
+  SDL_RenderCopy(renderer, startingTile2Texture, NULL, &destinationTile2);
 
   // Render
-	SDL_RenderPresent(renderer);
+  SDL_RenderPresent(renderer);
+}
 
-
+int main(int argc, char** argv)
+{
+  initGraphics();
 
   //determine where to start in the domino stack
   int tileCounter = 1;
@@ -129,8 +130,6 @@ int main(int argc, char** argv)
   random_shuffle(std::begin(tileNumbers), std::end(tileNumbers));
 
   //Game::init();
-
-
 
   while(appletMainLoop())
   {
@@ -155,11 +154,6 @@ int main(int argc, char** argv)
 
     */
   }
-
-    socketExit();
-
-
-    	SDL_Quit();				// SDL cleanup
-	  return EXIT_SUCCESS;
-
+  SDL_Quit();				// SDL cleanup
+	return EXIT_SUCCESS;
 }
