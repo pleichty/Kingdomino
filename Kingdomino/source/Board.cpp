@@ -29,9 +29,11 @@ void Board::placeDomino(Domino domino, int x, int y, Direction direction){
   }
 }
 
+//TODO fix how this displays - will have one player board on screen at a time
 void Board::displayBoard(SDL_Renderer* renderer){
   int startx = 100;
   int starty;
+  //TODO Do this with text rendere
   printf("player %d \n", player);
   //display board for either player 1 or 2
   if(player == 1){
@@ -42,7 +44,7 @@ void Board::displayBoard(SDL_Renderer* renderer){
   }
   for(int x=0; x< 5; x++){
     for(int y=0;y<5;y++){
-        tileArr[x][y].printTile(renderer,x,y,startx,starty,player);
+        tileArr[x][y].printTile(renderer,x,y);
     }
   }
 }
