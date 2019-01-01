@@ -28,6 +28,11 @@ public:
       return tileNumber;
     }
 
+    void printDominoForSelection(SDL_Renderer* renderer, int dominoNumber){
+        tile1.printTile(renderer, 600, 50 + (dominoNumber * 100));
+        tile2.printTile(renderer, 700, 50 + (dominoNumber * 100));
+    }
+
 private:
    Tile tile1;
    Tile tile2;
