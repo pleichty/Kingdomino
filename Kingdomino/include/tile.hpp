@@ -36,15 +36,8 @@ public:
       return crownCount;
     };
 
-    void printTile(SDL_Renderer* renderer,int x, int y, int startx, int starty,int player){
-      //create texture for starting tiles
+    SDL_Texture* getTextureforTile(SDL_Renderer* renderer, int player = 1){
       SDL_Surface* tileSurface;
-
-      SDL_Rect tileDestination;
-      tileDestination.x = startx + (x * 100);
-      tileDestination.y = starty + (y * 100);
-      tileDestination.w = 100;
-      tileDestination.h = 100;
 
       if(terrain == Terrain::wild && player == 1){
         tileSurface = IMG_Load("romfs:/resources/images/startingTile1.png");
@@ -74,10 +67,18 @@ public:
       else{
         tileSurface = IMG_Load("romfs:/resources/images/emptyTile.png");
       }
-    SDL_Texture* tileTexture = SDL_CreateTextureFromSurface(renderer, tileSurface);
+      return  SDL_CreateTextureFromSurface(renderer, tileSurface);
+    }
 
-    // Copy bg texture to renderer:
-    SDL_RenderCopy(renderer, tileTexture, NULL, &tileDestination);
+    void printTile(SDL_Renderer* renderer,int x, int y){
+      SDL_Rect tileDestination;
+      tileDestination.x = x;
+      tileDestination.y = y;
+      tileDestination.w = 100;
+      tileDestination.h = 100;
+
+      // Copy bg texture to renderer:
+      SDL_RenderCopy(renderer, getTextureforTile(renderer), NULL, &tileDestination);
   }
 
 private:
