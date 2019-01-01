@@ -8,8 +8,6 @@ void Game::init(SDL_Renderer* renderer)
   score = 0;
   Board player1Board = Board(1);
   Board player2Board = Board(2);
-  player1Board.displayBoard(renderer);
-  player2Board.displayBoard(renderer);
 }
 
 void Game::scanInput(void)
