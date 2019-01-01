@@ -68,43 +68,6 @@ Domino stack[48] = {
   ,Domino(Tile(Terrain::wheat, 0),Tile(Terrain::mine, 3),48)
 };
 
-void initGraphics(SDL_Renderer* renderer){
-
-  // Create bg texture:
-  SDL_Surface* bg_surface = IMG_Load("romfs:/resources/images/background.png");			// Read image as surface
-  SDL_Texture* bg_texture = SDL_CreateTextureFromSurface(renderer, bg_surface);	// Create texture from surface
-
-  //create texture for starting tiles
-  SDL_Surface* startingTile1Surface = IMG_Load("romfs:/resources/images/startingTile1.png");
-  SDL_Texture* startingTile1Texture = SDL_CreateTextureFromSurface(renderer, startingTile1Surface);
-  SDL_Surface* startingTile2Surface = IMG_Load("romfs:/resources/images/startingTile2.png");
-  SDL_Texture* startingTile2Texture = SDL_CreateTextureFromSurface(renderer, startingTile2Surface);
-
-  // Clear renderer:
-  SDL_RenderClear(renderer);
-
-  SDL_Rect destinationTile1;
-  destinationTile1.x = 100;
-  destinationTile1.y = 600;
-  destinationTile1.w = 100;
-  destinationTile1.h = 100;
-
-  SDL_Rect destinationTile2;
-  destinationTile2.x = 1000;
-  destinationTile2.y = 600;
-  destinationTile2.w = 100;
-  destinationTile2.h = 100;
-
-
-  // Copy bg texture to renderer:
-  SDL_RenderCopy(renderer, bg_texture, NULL, NULL);
-  SDL_RenderCopy(renderer, startingTile1Texture, NULL, &destinationTile1);
-  SDL_RenderCopy(renderer, startingTile2Texture, NULL, &destinationTile2);
-
-  // Render
-  SDL_RenderPresent(renderer);
-}
-
 int main(int argc, char** argv)
 {
   SDL_Init(SDL_INIT_EVERYTHING);
@@ -116,9 +79,14 @@ int main(int argc, char** argv)
   SDL_Window* window = SDL_CreateWindow("Main-Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP);
   SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
 
-  initGraphics(renderer);
+  SDL_Surface* bg_surface = IMG_Load("romfs:/resources/images/background.png");			// Read image as surface
+  SDL_Texture* bg_texture = SDL_CreateTextureFromSurface(renderer, bg_surface);	// Create texture from surface
+  SDL_RenderClear(renderer);
+  SDL_RenderCopy(renderer, bg_texture, NULL, NULL);
+  SDL_RenderPresent(renderer);
+
   //determine where to start in the domino stack
-  int tileCounter = 1;
+  int tileCounter = 0;
   int tileNumbers[48];
 
   for(int i = 0; i<48;i++){
@@ -138,21 +106,22 @@ int main(int argc, char** argv)
 
     if(kdown & KEY_PLUS)						//This isn't a convention but just for consistency. If the Plus button gets pressed, close the program. Most homebrews do that.
       break;
-/*
+
     if(kdown & KEY_A  && tileCounter < 48){
-      printf("New Dominos: \n" );
-
-      for(int i = tileCounter; i < tileCounter + 4; i++){
-        Domino domino = stack[tileNumbers[i - 1]];
-        printf("Domino %d:", i);
-        domino.getTile1().printTile();
-        domino.getTile2().printTile();
-        printf("\n");
-      }
-      tileCounter += 4;
+      SDL_RenderClear(renderer);
+      SDL_RenderCopy(renderer, bg_texture, NULL, NULL);
+      Domino dominoSelection[4] = {stack[tileNumbers[tileCounter]]
+      ,stack[tileNumbers[tileCounter+1]]
+      ,stack[tileNumbers[tileCounter+2]]
+      ,stack[tileNumbers[tileCounter+3]]};
+      printf("here");
+      dominoSelection[0].printDominoForSelection(renderer, 1);
+      dominoSelection[1].printDominoForSelection(renderer, 2);
+      dominoSelection[2].printDominoForSelection(renderer, 3);
+      dominoSelection[3].printDominoForSelection(renderer, 4);
+      SDL_RenderPresent(renderer);
+      tileCounter+=4;
     }
-
-    */
   }
   SDL_Quit();				// SDL cleanup
 	return EXIT_SUCCESS;
