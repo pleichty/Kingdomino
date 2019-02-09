@@ -36,41 +36,32 @@ public:
       return crownCount;
     };
 
-    SDL_Texture* getTextureforTile(SDL_Renderer* renderer, int player = 1){
-      SDL_Surface* tileSurface;
-
-      if(terrain == Terrain::wild && player == 1){
-        tileSurface = IMG_Load("romfs:/resources/images/startingTile1.png");
-      }
-      else if(terrain == Terrain::wild && player == 2){
-        tileSurface = IMG_Load("romfs:/resources/images/startingTile2.png");
-      }
-      else if(terrain == Terrain::grass){
-        tileSurface = IMG_Load("romfs:/resources/images/grassTile.png");
+    SDL_Texture* getTextureforTile(SDL_Renderer* renderer, SDL_Texture* textures[]){
+      if(terrain == Terrain::grass){
+        return textures[0];
       }
       else if(terrain == Terrain::forest){
-        tileSurface = IMG_Load("romfs:/resources/images/forestTile.png");
+        return textures[1];
       }
       else if(terrain == Terrain::wheat){
-        tileSurface = IMG_Load("romfs:/resources/images/wheatTile.png");
+        return textures[2];
       }
       else if(terrain == Terrain::water){
-        tileSurface = IMG_Load("romfs:/resources/images/waterTile.png");
+        return textures[3];
       }
       else if(terrain == Terrain::mine){
-        tileSurface = IMG_Load("romfs:/resources/images/mineTile.png");
+        return textures[4];
       }
       else if(terrain == Terrain::swamp){
-        tileSurface = IMG_Load("romfs:/resources/images/swampTile.png");
+        return textures[5];
       }
       //empty
       else{
-        tileSurface = IMG_Load("romfs:/resources/images/emptyTile.png");
+        return textures[6];
       }
-      return  SDL_CreateTextureFromSurface(renderer, tileSurface);
     }
 
-    void printTile(SDL_Renderer* renderer,int x, int y){
+    void printTile(SDL_Renderer* renderer,int x, int y, SDL_Texture* textures[]){
       SDL_Rect tileDestination;
       tileDestination.x = x;
       tileDestination.y = y;
@@ -78,7 +69,7 @@ public:
       tileDestination.h = 100;
 
       // Copy bg texture to renderer:
-      SDL_RenderCopy(renderer, getTextureforTile(renderer), NULL, &tileDestination);
+      SDL_RenderCopy(renderer, getTextureforTile(renderer, textures), NULL, &tileDestination);
   }
 
 private:

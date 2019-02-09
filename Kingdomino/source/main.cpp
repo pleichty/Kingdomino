@@ -7,6 +7,10 @@
 #include <algorithm>
 #include <iterator>
 #include <iostream>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <sys/errno.h>
+#include <unistd.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
@@ -16,6 +20,8 @@
 
 #define SCREEN_W 1280
 #define SCREEN_H 720
+
+
 
 Domino stack[48] = {
    Domino(Tile(Terrain::wheat, 0),Tile(Terrain::wheat, 0),1)
@@ -68,8 +74,32 @@ Domino stack[48] = {
   ,Domino(Tile(Terrain::wheat, 0),Tile(Terrain::mine, 3),48)
 };
 
+void loadTilePictures(SDL_Renderer* renderer, SDL_Texture* textures[], SDL_Surface* surfaces[]){
+  surfaces[0] = IMG_Load("romfs:/resources/images/grassTile.png");
+  surfaces[1] = IMG_Load("romfs:/resources/images/forestTile.png");
+  surfaces[2] = IMG_Load("romfs:/resources/images/wheatTile.png");
+  surfaces[3] = IMG_Load("romfs:/resources/images/waterTile.png");
+  surfaces[4] = IMG_Load("romfs:/resources/images/mineTile.png");
+  surfaces[5] = IMG_Load("romfs:/resources/images/swampTile.png");
+  surfaces[6] = IMG_Load("romfs:/resources/images/emptyTile.png");
+  textures[0] = SDL_CreateTextureFromSurface(renderer, surfaces[0]);
+  textures[1] = SDL_CreateTextureFromSurface(renderer, surfaces[1]);
+  textures[2] = SDL_CreateTextureFromSurface(renderer, surfaces[2]);
+  textures[3] = SDL_CreateTextureFromSurface(renderer, surfaces[3]);
+  textures[4] = SDL_CreateTextureFromSurface(renderer, surfaces[4]);
+  textures[5] = SDL_CreateTextureFromSurface(renderer, surfaces[5]);
+  textures[6] = SDL_CreateTextureFromSurface(renderer, surfaces[6]);
+}
+
 int main(int argc, char** argv)
 {
+
+  SDL_Texture* textures[20];
+  SDL_Surface* surfaces[20];
+
+  u32 kdown = 0x00000000;
+  u32 kdownOld = 0x00000000;
+
   SDL_Init(SDL_INIT_EVERYTHING);
   IMG_Init(IMG_INIT_PNG);
   TTF_Init();
@@ -98,30 +128,37 @@ int main(int argc, char** argv)
   random_shuffle(std::begin(tileNumbers), std::end(tileNumbers));
 
   Game::init(renderer);
-
+  loadTilePictures(renderer, textures, surfaces);
   while(appletMainLoop())
   {
     hidScanInput();								//Scans our controllers for any button presses since the last time this function was called
-    u32 kdown = hidKeysDown(CONTROLLER_P1_AUTO);	//Read the last button presses and store them in the kdown variable. CONTROLLER_P1_AUTO reads the values from the currently used controller.
+    kdown = hidKeysDown(CONTROLLER_P1_AUTO);	//Read the last button presses and store them in the kdown variable. CONTROLLER_P1_AUTO reads the values from the currently used controller.
 
-    if(kdown & KEY_PLUS)						//This isn't a convention but just for consistency. If the Plus button gets pressed, close the program. Most homebrews do that.
+    if(kdown > kdownOld && (kdown & KEY_PLUS))						//This isn't a convention but just for consistency. If the Plus button gets pressed, close the program. Most homebrews do that.
       break;
 
-    if(kdown & KEY_A  && tileCounter < 48){
+    if(kdown > kdownOld && (kdown & KEY_B)){
+      SDL_RenderClear(renderer);
+      SDL_RenderPresent(renderer);
+    }
+
+    if(kdown > kdownOld && (kdown & KEY_A  && tileCounter < 48)){
       SDL_RenderClear(renderer);
       SDL_RenderCopy(renderer, bg_texture, NULL, NULL);
-      Domino dominoSelection[4] = {stack[tileNumbers[tileCounter]]
-      ,stack[tileNumbers[tileCounter+1]]
-      ,stack[tileNumbers[tileCounter+2]]
-      ,stack[tileNumbers[tileCounter+3]]};
-      printf("here");
-      dominoSelection[0].printDominoForSelection(renderer, 1);
-      dominoSelection[1].printDominoForSelection(renderer, 2);
-      dominoSelection[2].printDominoForSelection(renderer, 3);
-      dominoSelection[3].printDominoForSelection(renderer, 4);
+      Domino dominoSelection[4] = {
+        stack[tileNumbers[tileCounter]]
+        ,stack[tileNumbers[tileCounter+1]]
+        ,stack[tileNumbers[tileCounter+2]]
+        ,stack[tileNumbers[tileCounter+3]]
+      };
+      dominoSelection[0].printDominoForSelection(renderer, 1, textures);
+      dominoSelection[1].printDominoForSelection(renderer, 2, textures);
+      dominoSelection[2].printDominoForSelection(renderer, 3, textures);
+      dominoSelection[3].printDominoForSelection(renderer, 4, textures);
       SDL_RenderPresent(renderer);
       tileCounter+=4;
     }
+    kdownOld = kdown;
   }
   SDL_Quit();				// SDL cleanup
 	return EXIT_SUCCESS;

@@ -30,6 +30,7 @@ void Board::placeDomino(Domino domino, int x, int y, Direction direction){
 }
 
 //TODO fix how this displays - will have one player board on screen at a time
+/*
 void Board::displayBoard(SDL_Renderer* renderer){
   int startx = 100;
   int starty;
@@ -48,3 +49,4 @@ void Board::displayBoard(SDL_Renderer* renderer){
     }
   }
 }
+*/
