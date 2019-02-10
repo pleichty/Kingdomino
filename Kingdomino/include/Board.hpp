@@ -23,7 +23,7 @@ public:
 
   bool canPlaceDomino(Domino domino, int x, int y, Direction direction);
 
-  void displayBoard(SDL_Renderer* renderer);
+  void displayBoard(SDL_Renderer* renderer, SDL_Texture* textures[]);
 
   int calculateScore();
 
