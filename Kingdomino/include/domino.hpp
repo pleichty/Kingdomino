@@ -16,6 +16,10 @@ public:
       tileNumber = tileNum;
     }
 
+    Domino(){
+      
+    }
+
     Tile getTile1(){
       return tile1;
     }

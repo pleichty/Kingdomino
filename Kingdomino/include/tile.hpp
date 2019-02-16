@@ -56,8 +56,9 @@ public:
         return textures[5];
       }
       //empty
+      //TODO need to figure out empty tiles
       else{
-        return textures[6];
+        return textures[0];
       }
     }
 
