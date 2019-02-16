@@ -81,7 +81,7 @@ void loadTilePictures(SDL_Renderer* renderer, SDL_Texture* textures[], SDL_Surfa
   surfaces[3] = IMG_Load("romfs:/resources/images/waterTile.png");
   surfaces[4] = IMG_Load("romfs:/resources/images/mineTile.png");
   surfaces[5] = IMG_Load("romfs:/resources/images/swampTile.png");
-  surfaces[6] = IMG_Load("romfs:/resources/images/emptyTile.png");
+  surfaces[6] = IMG_Load("romfs:/resources/images/cursor.png");
   textures[0] = SDL_CreateTextureFromSurface(renderer, surfaces[0]);
   textures[1] = SDL_CreateTextureFromSurface(renderer, surfaces[1]);
   textures[2] = SDL_CreateTextureFromSurface(renderer, surfaces[2]);
@@ -131,16 +131,11 @@ int main(int argc, char** argv)
   loadTilePictures(renderer, textures, surfaces);
   while(appletMainLoop())
   {
-    hidScanInput();								//Scans our controllers for any button presses since the last time this function was called
-    kdown = hidKeysDown(CONTROLLER_P1_AUTO);	//Read the last button presses and store them in the kdown variable. CONTROLLER_P1_AUTO reads the values from the currently used controller.
+    hidScanInput();
+    kdown = hidKeysDown(CONTROLLER_P1_AUTO);
 
-    if(kdown > kdownOld && (kdown & KEY_PLUS))						//This isn't a convention but just for consistency. If the Plus button gets pressed, close the program. Most homebrews do that.
+    if(kdown > kdownOld && (kdown & KEY_PLUS))
       break;
-
-    if(kdown > kdownOld && (kdown & KEY_B)){
-      SDL_RenderClear(renderer);
-      SDL_RenderPresent(renderer);
-    }
 
     if(kdown > kdownOld && (kdown & KEY_A  && tileCounter < 48)){
       SDL_RenderClear(renderer);
@@ -155,7 +150,44 @@ int main(int argc, char** argv)
       dominoSelection[1].printDominoForSelection(renderer, 2, textures);
       dominoSelection[2].printDominoForSelection(renderer, 3, textures);
       dominoSelection[3].printDominoForSelection(renderer, 4, textures);
+      //display cursor at tile 1
+      SDL_Rect cursorDestination;
+      cursorDestination.x = 400;
+      cursorDestination.y = 125;
+      cursorDestination.w = 80;
+      cursorDestination.h = 60;
+      SDL_RenderCopy(renderer, textures[6], NULL, &cursorDestination);
       SDL_RenderPresent(renderer);
+
+      bool decisionMade = false;
+      int dominoNumberSelected = 1;
+      Domino dominoSelected;
+      //wait until user makes decision on domino to pick
+      while(!decisionMade)
+      {
+        hidScanInput();
+        kdown = hidKeysDown(CONTROLLER_P1_AUTO);
+        if(kdown & KEY_UP && (dominoNumberSelected > 1)){
+          dominoNumberSelected -= 1;
+          cursorDestination.y -= 100;
+          SDL_RenderCopy(renderer, textures[6], NULL, &cursorDestination);
+          SDL_RenderPresent(renderer);
+        }
+        if(kdown & KEY_DOWN && (dominoNumberSelected < 4)){
+          dominoNumberSelected += 1;
+          cursorDestination.y += 100;
+          SDL_RenderCopy(renderer, textures[6], NULL, &cursorDestination);
+          SDL_RenderPresent(renderer);
+        }
+        if(kdown & KEY_A){
+          decisionMade = true;
+          dominoSelected = dominoSelection[dominoNumberSelected - 1];
+          SDL_RenderClear(renderer);
+          SDL_RenderCopy(renderer, bg_texture, NULL, NULL);
+          dominoSelected.printDominoForSelection(renderer, 1, textures);
+          SDL_RenderPresent(renderer);
+        }
+      }
       tileCounter+=4;
     }
     kdownOld = kdown;
