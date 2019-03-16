@@ -14,7 +14,7 @@
 
 using namespace std;
 
-enum class Terrain{forest,grass,wheat,water,mine,swamp,wild,empty};
+enum class Terrain{forest,grass,wheat,water,mine,swamp,wild,p1,p2,empty};
 
 class Tile
 {
@@ -55,10 +55,16 @@ public:
       else if(terrain == Terrain::swamp){
         return textures[5];
       }
+      else if(terrain == Terrain::p1){
+        return textures[7];
+      }
+      else if(terrain == Terrain::p2){
+        return textures[8];
+      }
       //empty
       //TODO need to figure out empty tiles
       else{
-        return textures[0];
+        return textures[9];
       }
     }
 
