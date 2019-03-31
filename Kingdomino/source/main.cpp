@@ -21,8 +21,6 @@
 #define SCREEN_W 1280
 #define SCREEN_H 720
 
-
-
 Domino stack[48] = {
    Domino(Tile(Terrain::wheat, 0),Tile(Terrain::wheat, 0),1)
   ,Domino(Tile(Terrain::wheat, 0),Tile(Terrain::wheat, 0),2)
@@ -97,6 +95,18 @@ void loadTilePictures(SDL_Renderer* renderer, SDL_Texture* textures[], SDL_Surfa
   textures[9] = SDL_CreateTextureFromSurface(renderer, surfaces[9]);
 }
 
+void updateCursorLocation(SDL_Texture* textures[20], SDL_Renderer* renderer, SDL_Texture* bg_texture, Domino dominoSelection[4], SDL_Rect cursorDestination)
+{
+	SDL_RenderClear(renderer);
+	SDL_RenderCopy(renderer, bg_texture, NULL, NULL);
+	dominoSelection[0].printDominoForSelection(renderer, 1, textures);
+	dominoSelection[1].printDominoForSelection(renderer, 2, textures);
+	dominoSelection[2].printDominoForSelection(renderer, 3, textures);
+	dominoSelection[3].printDominoForSelection(renderer, 4, textures);
+	SDL_RenderCopy(renderer, textures[6], NULL, &cursorDestination);
+	SDL_RenderPresent(renderer);
+}
+
 int main(int argc, char** argv)
 {
 
@@ -147,7 +157,7 @@ int main(int argc, char** argv)
       SDL_RenderClear(renderer);
       SDL_RenderCopy(renderer, bg_texture, NULL, NULL);
       Domino dominoSelection[4] = {
-        stack[tileNumbers[tileCounter]]
+         stack[tileNumbers[tileCounter]]
         ,stack[tileNumbers[tileCounter+1]]
         ,stack[tileNumbers[tileCounter+2]]
         ,stack[tileNumbers[tileCounter+3]]
@@ -176,44 +186,29 @@ int main(int argc, char** argv)
         if(kdown & KEY_UP && (dominoNumberSelected > 1)){
           dominoNumberSelected -= 1;
           cursorDestination.y -= 100;
-          SDL_RenderClear(renderer);
-          SDL_RenderCopy(renderer, bg_texture, NULL, NULL);
-          dominoSelection[0].printDominoForSelection(renderer, 1, textures);
-          dominoSelection[1].printDominoForSelection(renderer, 2, textures);
-          dominoSelection[2].printDominoForSelection(renderer, 3, textures);
-          dominoSelection[3].printDominoForSelection(renderer, 4, textures);
-          SDL_RenderCopy(renderer, textures[6], NULL, &cursorDestination);
-          SDL_RenderPresent(renderer);
+		  updateCursorLocation(textures, renderer, bg_texture, dominoSelection, cursorDestination);
         }
         if(kdown & KEY_DOWN && (dominoNumberSelected < 4)){
           dominoNumberSelected += 1;
           cursorDestination.y += 100;
-          SDL_RenderClear(renderer);
-          SDL_RenderCopy(renderer, bg_texture, NULL, NULL);
-          dominoSelection[0].printDominoForSelection(renderer, 1, textures);
-          dominoSelection[1].printDominoForSelection(renderer, 2, textures);
-          dominoSelection[2].printDominoForSelection(renderer, 3, textures);
-          dominoSelection[3].printDominoForSelection(renderer, 4, textures);
-          SDL_RenderCopy(renderer, textures[6], NULL, &cursorDestination);
-          SDL_RenderPresent(renderer);
+          updateCursorLocation(textures, renderer, bg_texture, dominoSelection, cursorDestination);
         }
         if(kdown & KEY_A){
           decisionMade = true;
           dominoSelected = dominoSelection[dominoNumberSelected - 1];
-          SDL_RenderClear(renderer);
-          SDL_RenderCopy(renderer, bg_texture, NULL, NULL);
-          dominoSelected.printDominoForSelection(renderer, 1, textures);
-          SDL_RenderPresent(renderer);
         }
       }
       //TODO 2nd player stuff
-/*
+
       //load board, and move new domino around it
       decisionMade = false;
       while(!decisionMade){
+		  SDL_RenderClear(renderer);
+		  SDL_RenderCopy(renderer, bg_texture, NULL, NULL);
 
+		  SDL_RenderPresent(renderer);
       }
-*/
+
       //start the next round
       tileCounter+=4;
     }
