@@ -209,8 +209,8 @@ int main(int argc, char** argv)
       decisionMade = false;
       while(!decisionMade){
 		  SDL_RenderClear(renderer);
-		  SDL_RenderCopy(renderer, bg_texture, NULL, NULL);
-
+		  SDL_RenderCopy(renderer, bg_texture, nullptr, nullptr);
+		  gameStateManager.getBoard1().displayBoard(renderer, textures);
 		  SDL_RenderPresent(renderer);
       }
 
