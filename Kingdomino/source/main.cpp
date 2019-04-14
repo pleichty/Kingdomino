@@ -1,8 +1,9 @@
 #include <switch.h>
 #include <sys/stat.h>
-#include <stdio.h>
-#include <string.h>
-#include "game.hpp"
+#include <cstdio>
+#include <cstring>
+#include "domino.hpp"
+#include "GameStateManager.hpp"
 #include <random>
 #include <algorithm>
 #include <iterator>
@@ -11,6 +12,7 @@
 #include <arpa/inet.h>
 #include <sys/errno.h>
 #include <unistd.h>
+#include <cstdlib>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
@@ -20,6 +22,8 @@
 
 #define SCREEN_W 1280
 #define SCREEN_H 720
+
+using namespace std;
 
 Domino stack[48] = {
    Domino(Tile(Terrain::wheat, 0),Tile(Terrain::wheat, 0),1)
@@ -98,12 +102,12 @@ void loadTilePictures(SDL_Renderer* renderer, SDL_Texture* textures[], SDL_Surfa
 void updateCursorLocation(SDL_Texture* textures[20], SDL_Renderer* renderer, SDL_Texture* bg_texture, Domino dominoSelection[4], SDL_Rect cursorDestination)
 {
 	SDL_RenderClear(renderer);
-	SDL_RenderCopy(renderer, bg_texture, NULL, NULL);
+	SDL_RenderCopy(renderer, bg_texture, nullptr, nullptr);
 	dominoSelection[0].printDominoForSelection(renderer, 1, textures);
 	dominoSelection[1].printDominoForSelection(renderer, 2, textures);
 	dominoSelection[2].printDominoForSelection(renderer, 3, textures);
 	dominoSelection[3].printDominoForSelection(renderer, 4, textures);
-	SDL_RenderCopy(renderer, textures[6], NULL, &cursorDestination);
+	SDL_RenderCopy(renderer, textures[6], nullptr, &cursorDestination);
 	SDL_RenderPresent(renderer);
 }
 
@@ -128,7 +132,7 @@ int main(int argc, char** argv)
   SDL_Surface* bg_surface = IMG_Load("romfs:/resources/images/background.png");			// Read image as surface
   SDL_Texture* bg_texture = SDL_CreateTextureFromSurface(renderer, bg_surface);	// Create texture from surface
   SDL_RenderClear(renderer);
-  SDL_RenderCopy(renderer, bg_texture, NULL, NULL);
+  SDL_RenderCopy(renderer, bg_texture, nullptr, nullptr);
   SDL_RenderPresent(renderer);
 
   //determine where to start in the domino stack
@@ -140,10 +144,11 @@ int main(int argc, char** argv)
   }
 
   //shuffle up the tile numbers
-  std::srand(std::time(0));
-  random_shuffle(std::begin(tileNumbers), std::end(tileNumbers));
+  srand(time(nullptr));
+  random_shuffle(begin(tileNumbers), end(tileNumbers));
 
-  Game::init(renderer);
+  //create both boards
+  GameStateManager gameStateManager = GameStateManager();
   loadTilePictures(renderer, textures, surfaces);
   while(appletMainLoop())
   {
@@ -172,7 +177,7 @@ int main(int argc, char** argv)
       cursorDestination.y = 125;
       cursorDestination.w = 80;
       cursorDestination.h = 60;
-      SDL_RenderCopy(renderer, textures[6], NULL, &cursorDestination);
+      SDL_RenderCopy(renderer, textures[6], nullptr, &cursorDestination);
       SDL_RenderPresent(renderer);
 
       bool decisionMade = false;

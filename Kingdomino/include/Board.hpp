@@ -57,6 +57,11 @@ public:
       tileArr[4][4] = Tile(Terrain::empty, 0);
     }
 
+	Board()
+    {
+	    
+    }
+
     int getScore(){
       return score;
     }

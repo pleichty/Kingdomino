@@ -8,3 +8,7 @@
 *.opendb
 *.json
 *.sqlite
+*.sln
+*.vcxproj
+*.user
+*.filters
