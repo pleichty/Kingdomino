@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <string>
 #include "domino.hpp"
-#include "GameStateManager.hpp"
+#include "Coordinates.hpp"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
@@ -19,13 +19,13 @@ class Board
 {
 public:
 
-  void placeDomino(Domino domino, GameStateManager game_state_manager);
+  void placeDomino(Domino domino, Coordinates tile_1_coordinates, Coordinates tile_2_coordinates);
   
   void displayBoard(SDL_Renderer* renderer, SDL_Texture* textures[]);
 
   int calculateScore();
 
-  bool canPlaceDomino(Domino domino, GameStateManager game_state_manager);
+  bool canPlaceDomino(Domino domino, Coordinates tile_1_coordinates, Coordinates tile_2_coordinates);
 
     Board(int p){
       player = p;

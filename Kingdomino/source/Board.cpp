@@ -11,15 +11,15 @@ int Board::calculateScore(){
   return 0;
 }
 
-bool Board::canPlaceDomino(Domino domino, GameStateManager game_state_manager){
+bool Board::canPlaceDomino(Domino domino, Coordinates tile_1_coordinates, Coordinates tile_2_coordinates){
   //TODO
   return false;
 }
 
-void Board::placeDomino(Domino domino, GameStateManager game_state_manager){
-  tileArr[game_state_manager.getCoordinates1().getXCoordinate()][game_state_manager.getCoordinates1().getYCoordinate()]
+void Board::placeDomino(Domino domino, Coordinates tile_1_coordinates, Coordinates tile_2_coordinates){
+  tileArr[tile_1_coordinates.getXCoordinate()][tile_1_coordinates.getYCoordinate()]
 	= domino.getTile1();
-  tileArr[game_state_manager.getCoordinates2().getXCoordinate()][game_state_manager.getCoordinates2().getYCoordinate()]
+  tileArr[tile_2_coordinates.getXCoordinate()][tile_2_coordinates.getYCoordinate()]
 	= domino.getTile2();
 }
 
