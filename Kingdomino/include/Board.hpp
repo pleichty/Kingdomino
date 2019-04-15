@@ -19,13 +19,15 @@ class Board
 {
 public:
 
-  void placeDomino(Domino domino, Coordinates tile_1_coordinates, Coordinates tile_2_coordinates);
+  void place_domino(Domino domino, Coordinates tile_1_coordinates, Coordinates tile_2_coordinates);
   
   void displayBoard(SDL_Renderer* renderer, SDL_Texture* textures[]);
 
-  int calculateScore();
+  int calculate_score();
 
-  bool canPlaceDomino(Domino domino, Coordinates tile_1_coordinates, Coordinates tile_2_coordinates);
+  bool can_place_domino(Domino domino, Coordinates tile_1_coordinates, Coordinates tile_2_coordinates);
+
+  bool check_position(int x_coordinate, int y_coordinate, Terrain terrain);
 
     Board(int p){
       player = p;
