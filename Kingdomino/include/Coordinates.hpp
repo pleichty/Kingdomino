@@ -22,6 +22,15 @@ public:
 {
 		return y_coordinate;
 }
+	void set_x_coordinate(int x)
+	{
+		x_coordinate = x;
+	}
+
+	void set_y_coordinate(int y)
+	{
+		y_coordinate = y;
+	}
 
 private:
 	int x_coordinate;

@@ -111,6 +111,11 @@ void updateCursorLocation(SDL_Texture* textures[20], SDL_Renderer* renderer, SDL
 	SDL_RenderPresent(renderer);
 }
 
+void render_selected_tile(const Domino& domino, SDL_Renderer* renderer, Orientation orientation, SDL_Texture* textures[20])
+{
+	
+}
+
 int main(int argc, char** argv)
 {
 
@@ -182,7 +187,6 @@ int main(int argc, char** argv)
 
       bool decisionMade = false;
       int dominoNumberSelected = 1;
-      Domino dominoSelected;
       //wait until user makes decision on domino to pick
       while(!decisionMade)
       {
@@ -200,7 +204,7 @@ int main(int argc, char** argv)
         }
         if(kdown & KEY_A){
           decisionMade = true;
-          dominoSelected = dominoSelection[dominoNumberSelected - 1];
+		  gameStateManager.set_selected_domino(dominoSelection[dominoNumberSelected - 1]);
         }
       }
       //TODO 2nd player stuff
@@ -208,10 +212,43 @@ int main(int argc, char** argv)
       //load board, and move new domino around it
       decisionMade = false;
       while(!decisionMade){
+		  Coordinates tile_1_coordinates = gameStateManager.getCoordinates1();
+		  Coordinates tile_2_coordinates = gameStateManager.getCoordinates2();
 		  SDL_RenderClear(renderer);
 		  SDL_RenderCopy(renderer, bg_texture, nullptr, nullptr);
+		  render_selected_tile(gameStateManager.get_selected_domino(), renderer, gameStateManager.get_orientation(), textures);
 		  gameStateManager.getBoard1().displayBoard(renderer, textures);
+		  gameStateManager.display_overlay(renderer, textures);
+
 		  SDL_RenderPresent(renderer);
+		  hidScanInput();
+		  kdown = hidKeysDown(CONTROLLER_P1_AUTO);
+		  if (kdown & KEY_LEFT && ((gameStateManager.getCoordinates1().getXCoordinate() >= 1) || (gameStateManager.getCoordinates2().getXCoordinate() >= 1))) {
+			  tile_1_coordinates.set_x_coordinate(tile_1_coordinates.getXCoordinate() - 1);
+			  tile_2_coordinates.set_x_coordinate(tile_2_coordinates.getXCoordinate() - 1);
+		  }
+		  if (kdown & KEY_RIGHT && ((gameStateManager.getCoordinates1().getXCoordinate() <= 3) || (gameStateManager.getCoordinates2().getXCoordinate() <= 3))) {
+			  tile_1_coordinates.set_x_coordinate(tile_1_coordinates.getXCoordinate() + 1);
+			  tile_2_coordinates.set_x_coordinate(tile_2_coordinates.getXCoordinate() + 1);
+		  }
+		  if (kdown & KEY_UP && ((gameStateManager.getCoordinates1().getYCoordinate() >= 1) || (gameStateManager.getCoordinates2().getYCoordinate() >= 1))) {
+			  tile_1_coordinates.set_y_coordinate(tile_1_coordinates.getYCoordinate() - 1);
+			  tile_2_coordinates.set_y_coordinate(tile_2_coordinates.getYCoordinate() - 1);
+		  }
+		  if (kdown & KEY_DOWN && ((gameStateManager.getCoordinates1().getYCoordinate() <= 3) || (gameStateManager.getCoordinates2().getYCoordinate() <= 3))) {
+			  tile_1_coordinates.set_y_coordinate(tile_1_coordinates.getYCoordinate() + 1);
+			  tile_2_coordinates.set_y_coordinate(tile_2_coordinates.getYCoordinate() + 1);
+		  }
+		  if(kdown & KEY_A)
+		  {
+			  decisionMade = true;
+			  gameStateManager.getBoard1().place_domino(gameStateManager.get_selected_domino(), tile_1_coordinates, tile_2_coordinates);
+		  }
+		  if(kdown & KEY_X)
+		  {
+			  //TODO rotate
+		  }
+
       }
 
       //start the next round
