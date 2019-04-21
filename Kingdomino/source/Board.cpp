@@ -57,8 +57,8 @@ void Board::place_domino(Domino domino, Coordinates tile_1_coordinates, Coordina
 
 
 void Board::displayBoard(SDL_Renderer* renderer, SDL_Texture* textures[]){
-  const int start_x = 500;
-  const int start_y = 360;
+  const int start_x = 300;
+  const int start_y = 150;
 
   for(int x=0; x< 5; x++){
     for(int y=0;y<5;y++){

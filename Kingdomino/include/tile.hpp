@@ -61,10 +61,8 @@ public:
       else if(terrain == Terrain::p2){
         return textures[8];
       }
-      //empty
-      //TODO need to figure out empty tiles
       else{
-        return textures[9];
+        return textures[12];
       }
     }
 

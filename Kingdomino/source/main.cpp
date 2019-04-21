@@ -89,6 +89,7 @@ void loadTilePictures(SDL_Renderer* renderer, SDL_Texture* textures[], SDL_Surfa
   surfaces[9] = IMG_Load("romfs:/resources/images/cursor.png");
   surfaces[10] = IMG_Load("romfs:/resources/images/overlay_green.png");
   surfaces[11] = IMG_Load("romfs:/resources/images/overlay_red.png");
+  surfaces[12] = IMG_Load("romfs:/resources/images/empty_tile.png");
   textures[0] = SDL_CreateTextureFromSurface(renderer, surfaces[0]);
   textures[1] = SDL_CreateTextureFromSurface(renderer, surfaces[1]);
   textures[2] = SDL_CreateTextureFromSurface(renderer, surfaces[2]);
@@ -101,6 +102,7 @@ void loadTilePictures(SDL_Renderer* renderer, SDL_Texture* textures[], SDL_Surfa
   textures[9] = SDL_CreateTextureFromSurface(renderer, surfaces[9]);
   textures[10] = SDL_CreateTextureFromSurface(renderer, surfaces[10]);
   textures[11] = SDL_CreateTextureFromSurface(renderer, surfaces[11]);
+  textures[12] = SDL_CreateTextureFromSurface(renderer, surfaces[12]);
 }
 
 void updateCursorLocation(SDL_Texture* textures[20], SDL_Renderer* renderer, SDL_Texture* bg_texture, Domino dominoSelection[4], SDL_Rect cursorDestination)
@@ -118,8 +120,8 @@ void updateCursorLocation(SDL_Texture* textures[20], SDL_Renderer* renderer, SDL
 void render_selected_tile(Domino domino, SDL_Renderer* renderer, Orientation orientation, SDL_Texture* textures[20])
 {
 	//fix this
-	domino.getTile1().printTile(renderer, 100, 100, textures);
-	domino.getTile2().printTile(renderer, 300, 100, textures);
+	domino.getTile1().printTile(renderer, 50, 50, textures);
+	domino.getTile2().printTile(renderer, 150, 50, textures);
 }
 
 int main(int argc, char** argv)
@@ -218,8 +220,6 @@ int main(int argc, char** argv)
       //load board, and move new domino around it
       decisionMade = false;
       while(!decisionMade){
-		  Coordinates tile_1_coordinates = gameStateManager.getCoordinates1();
-		  Coordinates tile_2_coordinates = gameStateManager.getCoordinates2();
 		  SDL_RenderClear(renderer);
 		  SDL_RenderCopy(renderer, bg_texture, nullptr, nullptr);
 		  render_selected_tile(gameStateManager.get_selected_domino(), renderer, gameStateManager.get_orientation(), textures);
@@ -230,25 +230,25 @@ int main(int argc, char** argv)
 		  hidScanInput();
 		  kdown = hidKeysDown(CONTROLLER_P1_AUTO);
 		  if (kdown & KEY_LEFT && ((gameStateManager.getCoordinates1().getXCoordinate() >= 1) || (gameStateManager.getCoordinates2().getXCoordinate() >= 1))) {
-			  tile_1_coordinates.set_x_coordinate(tile_1_coordinates.getXCoordinate() - 1);
-			  tile_2_coordinates.set_x_coordinate(tile_2_coordinates.getXCoordinate() - 1);
+			  gameStateManager.getCoordinates1().set_x_coordinate(gameStateManager.getCoordinates1().getXCoordinate() - 1);
+			  gameStateManager.getCoordinates2().set_x_coordinate(gameStateManager.getCoordinates2().getXCoordinate() - 1);
 		  }
 		  if (kdown & KEY_RIGHT && ((gameStateManager.getCoordinates1().getXCoordinate() <= 3) || (gameStateManager.getCoordinates2().getXCoordinate() <= 3))) {
-			  tile_1_coordinates.set_x_coordinate(tile_1_coordinates.getXCoordinate() + 1);
-			  tile_2_coordinates.set_x_coordinate(tile_2_coordinates.getXCoordinate() + 1);
+			  gameStateManager.getCoordinates1().set_x_coordinate(gameStateManager.getCoordinates1().getXCoordinate() + 1);
+			  gameStateManager.getCoordinates2().set_x_coordinate(gameStateManager.getCoordinates2().getXCoordinate() + 1);
 		  }
 		  if (kdown & KEY_UP && ((gameStateManager.getCoordinates1().getYCoordinate() >= 1) || (gameStateManager.getCoordinates2().getYCoordinate() >= 1))) {
-			  tile_1_coordinates.set_y_coordinate(tile_1_coordinates.getYCoordinate() - 1);
-			  tile_2_coordinates.set_y_coordinate(tile_2_coordinates.getYCoordinate() - 1);
+			  gameStateManager.getCoordinates1().set_y_coordinate(gameStateManager.getCoordinates1().getYCoordinate() - 1);
+			  gameStateManager.getCoordinates2().set_y_coordinate(gameStateManager.getCoordinates2().getYCoordinate() - 1);
 		  }
 		  if (kdown & KEY_DOWN && ((gameStateManager.getCoordinates1().getYCoordinate() <= 3) || (gameStateManager.getCoordinates2().getYCoordinate() <= 3))) {
-			  tile_1_coordinates.set_y_coordinate(tile_1_coordinates.getYCoordinate() + 1);
-			  tile_2_coordinates.set_y_coordinate(tile_2_coordinates.getYCoordinate() + 1);
+			  gameStateManager.getCoordinates1().set_y_coordinate(gameStateManager.getCoordinates1().getYCoordinate() + 1);
+			  gameStateManager.getCoordinates2().set_y_coordinate(gameStateManager.getCoordinates2().getYCoordinate() + 1);
 		  }
 		  if(kdown & KEY_A)
 		  {
 			  decisionMade = true;
-			  gameStateManager.getBoard1().place_domino(gameStateManager.get_selected_domino(), tile_1_coordinates, tile_2_coordinates);
+			  gameStateManager.getBoard1().place_domino(gameStateManager.get_selected_domino(), gameStateManager.getCoordinates1(), gameStateManager.getCoordinates2());
 		  }
 		  if(kdown & KEY_X)
 		  {

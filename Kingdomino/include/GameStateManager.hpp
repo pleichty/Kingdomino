@@ -12,8 +12,8 @@ enum class Orientation{horizontal, vertical, horizontal_reverse, vertical_flippe
 class GameStateManager
 {
 public:
-	const int x_start = 500;
-	const int y_start = 360;
+	const int x_start = 300;
+	const int y_start = 150;
 
 	GameStateManager() {
 		board1 = Board(1);
