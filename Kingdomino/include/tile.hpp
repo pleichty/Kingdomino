@@ -14,7 +14,7 @@
 
 using namespace std;
 
-enum class Terrain{forest,grass,wheat,water,mine,swamp,wild,p1,p2,empty};
+enum class Terrain{forest,grass,wheat,water,mine,swamp,p1,p2,empty};
 
 class Tile
 {
