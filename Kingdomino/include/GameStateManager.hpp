@@ -12,6 +12,9 @@ enum class Orientation{horizontal, vertical, horizontal_reverse, vertical_flippe
 class GameStateManager
 {
 public:
+	const int x_start = 500;
+	const int y_start = 360;
+
 	GameStateManager() {
 		board1 = Board(1);
 		board2 = Board(2);
@@ -65,9 +68,27 @@ public:
 
 	void display_overlay(SDL_Renderer* renderer, struct SDL_Texture* textures[20])
 	{
-		//fix this
-		selected_domino.getTile1().printTile(renderer, 100, 100, textures);
-		selected_domino.getTile2().printTile(renderer, 300, 100, textures);
+		SDL_Rect tile_position_1;
+		tile_position_1.x = x_start + (tile_1_coordinates.getXCoordinate() * 100);
+		tile_position_1.y = y_start + (tile_1_coordinates.getYCoordinate() * 100);
+		tile_position_1.w = 100;
+		tile_position_1.h = 100;
+		SDL_Rect tile_position_2;
+		tile_position_2.x = x_start + (tile_2_coordinates.getXCoordinate() * 100);
+		tile_position_2.y = y_start + (tile_2_coordinates.getYCoordinate() * 100);
+		tile_position_2.w = 100;
+		tile_position_2.h = 100;
+		//TODO which board
+		if(board1.can_place_domino(selected_domino, tile_1_coordinates, tile_2_coordinates))
+		{
+			SDL_RenderCopy(renderer, textures[10], nullptr, &tile_position_1);
+			SDL_RenderCopy(renderer, textures[10], nullptr, &tile_position_2);
+		}
+		else
+		{
+			SDL_RenderCopy(renderer, textures[11], nullptr, &tile_position_1);
+			SDL_RenderCopy(renderer, textures[11], nullptr, &tile_position_2);
+		}
 	}
 
 private:

@@ -87,6 +87,8 @@ void loadTilePictures(SDL_Renderer* renderer, SDL_Texture* textures[], SDL_Surfa
   surfaces[7] = IMG_Load("romfs:/resources/images/startingTile1.png");
   surfaces[8] = IMG_Load("romfs:/resources/images/startingTile2.png");
   surfaces[9] = IMG_Load("romfs:/resources/images/cursor.png");
+  surfaces[10] = IMG_Load("romfs:/resources/images/overlay_green.png");
+  surfaces[11] = IMG_Load("romfs:/resources/images/overlay_red.png");
   textures[0] = SDL_CreateTextureFromSurface(renderer, surfaces[0]);
   textures[1] = SDL_CreateTextureFromSurface(renderer, surfaces[1]);
   textures[2] = SDL_CreateTextureFromSurface(renderer, surfaces[2]);
@@ -97,6 +99,8 @@ void loadTilePictures(SDL_Renderer* renderer, SDL_Texture* textures[], SDL_Surfa
   textures[7] = SDL_CreateTextureFromSurface(renderer, surfaces[7]);
   textures[8] = SDL_CreateTextureFromSurface(renderer, surfaces[8]);
   textures[9] = SDL_CreateTextureFromSurface(renderer, surfaces[9]);
+  textures[10] = SDL_CreateTextureFromSurface(renderer, surfaces[10]);
+  textures[11] = SDL_CreateTextureFromSurface(renderer, surfaces[11]);
 }
 
 void updateCursorLocation(SDL_Texture* textures[20], SDL_Renderer* renderer, SDL_Texture* bg_texture, Domino dominoSelection[4], SDL_Rect cursorDestination)
@@ -111,9 +115,11 @@ void updateCursorLocation(SDL_Texture* textures[20], SDL_Renderer* renderer, SDL
 	SDL_RenderPresent(renderer);
 }
 
-void render_selected_tile(const Domino& domino, SDL_Renderer* renderer, Orientation orientation, SDL_Texture* textures[20])
+void render_selected_tile(Domino domino, SDL_Renderer* renderer, Orientation orientation, SDL_Texture* textures[20])
 {
-	
+	//fix this
+	domino.getTile1().printTile(renderer, 100, 100, textures);
+	domino.getTile2().printTile(renderer, 300, 100, textures);
 }
 
 int main(int argc, char** argv)
