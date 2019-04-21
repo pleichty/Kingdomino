@@ -229,21 +229,17 @@ int main(int argc, char** argv)
 		  SDL_RenderPresent(renderer);
 		  hidScanInput();
 		  kdown = hidKeysDown(CONTROLLER_P1_AUTO);
-		  if (kdown & KEY_LEFT && ((gameStateManager.getCoordinates1().getXCoordinate() >= 1) || (gameStateManager.getCoordinates2().getXCoordinate() >= 1))) {
-			  gameStateManager.getCoordinates1().set_x_coordinate(gameStateManager.getCoordinates1().getXCoordinate() - 1);
-			  gameStateManager.getCoordinates2().set_x_coordinate(gameStateManager.getCoordinates2().getXCoordinate() - 1);
+		  if (kdown & KEY_LEFT && ((gameStateManager.getCoordinates1().getXCoordinate() >= 1) && (gameStateManager.getCoordinates2().getXCoordinate() >= 1))) {
+			  gameStateManager.move_left();
 		  }
-		  if (kdown & KEY_RIGHT && ((gameStateManager.getCoordinates1().getXCoordinate() <= 3) || (gameStateManager.getCoordinates2().getXCoordinate() <= 3))) {
-			  gameStateManager.getCoordinates1().set_x_coordinate(gameStateManager.getCoordinates1().getXCoordinate() + 1);
-			  gameStateManager.getCoordinates2().set_x_coordinate(gameStateManager.getCoordinates2().getXCoordinate() + 1);
+		  if (kdown & KEY_RIGHT && ((gameStateManager.getCoordinates1().getXCoordinate() <= 3) && (gameStateManager.getCoordinates2().getXCoordinate() <= 3))) {
+			  gameStateManager.move_right();
 		  }
-		  if (kdown & KEY_UP && ((gameStateManager.getCoordinates1().getYCoordinate() >= 1) || (gameStateManager.getCoordinates2().getYCoordinate() >= 1))) {
-			  gameStateManager.getCoordinates1().set_y_coordinate(gameStateManager.getCoordinates1().getYCoordinate() - 1);
-			  gameStateManager.getCoordinates2().set_y_coordinate(gameStateManager.getCoordinates2().getYCoordinate() - 1);
+		  if (kdown & KEY_UP && ((gameStateManager.getCoordinates1().getYCoordinate() >= 1) && (gameStateManager.getCoordinates2().getYCoordinate() >= 1))) {
+			  gameStateManager.move_up();
 		  }
-		  if (kdown & KEY_DOWN && ((gameStateManager.getCoordinates1().getYCoordinate() <= 3) || (gameStateManager.getCoordinates2().getYCoordinate() <= 3))) {
-			  gameStateManager.getCoordinates1().set_y_coordinate(gameStateManager.getCoordinates1().getYCoordinate() + 1);
-			  gameStateManager.getCoordinates2().set_y_coordinate(gameStateManager.getCoordinates2().getYCoordinate() + 1);
+		  if (kdown & KEY_DOWN && ((gameStateManager.getCoordinates1().getYCoordinate() <= 3) && (gameStateManager.getCoordinates2().getYCoordinate() <= 3))) {
+			  gameStateManager.move_down();
 		  }
 		  if(kdown & KEY_A)
 		  {

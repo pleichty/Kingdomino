@@ -91,6 +91,30 @@ public:
 		}
 	}
 
+	void move_right()
+	{
+		tile_1_coordinates.move_right();
+		tile_2_coordinates.move_right();
+	}
+
+	void move_left()
+	{
+		tile_1_coordinates.move_left();
+		tile_2_coordinates.move_left();
+	}
+
+	void move_up()
+	{
+		tile_1_coordinates.move_up();
+		tile_2_coordinates.move_up();
+	}
+
+	void move_down()
+	{
+		tile_1_coordinates.move_down();
+		tile_2_coordinates.move_down();
+	}
+
 private:
 	Board board1;
 	Board board2;

@@ -32,6 +32,26 @@ public:
 		y_coordinate = y;
 	}
 
+	void move_right()
+	{
+		x_coordinate += 1;
+	}
+
+	void move_left()
+	{
+		x_coordinate -= 1;
+	}
+
+	void move_up()
+	{
+		y_coordinate -= 1;
+	}
+
+	void move_down()
+	{
+		y_coordinate += 1;
+	}
+
 private:
 	int x_coordinate;
 	int y_coordinate;
