@@ -127,6 +127,9 @@ void render_selected_tile(Domino domino, SDL_Renderer* renderer, Orientation ori
 int main(int argc, char** argv)
 {
 
+	//consoleInit(nullptr); //Init the console
+	bool decision_made = false;
+
   SDL_Texture* textures[20];
   SDL_Surface* surfaces[20];
 
@@ -187,16 +190,16 @@ int main(int argc, char** argv)
       //display cursor at tile 1
       SDL_Rect cursorDestination;
       cursorDestination.x = 400;
-      cursorDestination.y = 125;
+      cursorDestination.y = 150;
       cursorDestination.w = 80;
       cursorDestination.h = 60;
       SDL_RenderCopy(renderer, textures[6], nullptr, &cursorDestination);
       SDL_RenderPresent(renderer);
 
-      bool decisionMade = false;
+	  decision_made = false;
       int dominoNumberSelected = 1;
       //wait until user makes decision on domino to pick
-      while(!decisionMade)
+      while(!decision_made)
       {
         hidScanInput();
         kdown = hidKeysDown(CONTROLLER_P1_AUTO);
@@ -211,15 +214,15 @@ int main(int argc, char** argv)
           updateCursorLocation(textures, renderer, bg_texture, dominoSelection, cursorDestination);
         }
         if(kdown & KEY_A){
-          decisionMade = true;
+			decision_made = true;
 		  gameStateManager.set_selected_domino(dominoSelection[dominoNumberSelected - 1]);
         }
       }
       //TODO 2nd player stuff
 
       //load board, and move new domino around it
-      decisionMade = false;
-      while(!decisionMade){
+	  decision_made = false;
+      while(!decision_made){
 		  SDL_RenderClear(renderer);
 		  SDL_RenderCopy(renderer, bg_texture, nullptr, nullptr);
 		  render_selected_tile(gameStateManager.get_selected_domino(), renderer, gameStateManager.get_orientation(), textures);
@@ -241,10 +244,11 @@ int main(int argc, char** argv)
 		  if (kdown & KEY_DOWN && ((gameStateManager.getCoordinates1().getYCoordinate() <= 3) && (gameStateManager.getCoordinates2().getYCoordinate() <= 3))) {
 			  gameStateManager.move_down();
 		  }
-		  if(kdown & KEY_A)
+		  if(kdown & KEY_A && gameStateManager.getBoard1().can_place_domino(gameStateManager.get_selected_domino(), gameStateManager.getCoordinates1(), gameStateManager.getCoordinates2()))
 		  {
-			  decisionMade = true;
-			  gameStateManager.getBoard1().place_domino(gameStateManager.get_selected_domino(), gameStateManager.getCoordinates1(), gameStateManager.getCoordinates2());
+			  decision_made = true;
+			  gameStateManager.place_domino(gameStateManager.get_selected_domino(), gameStateManager.getCoordinates1(), gameStateManager.getCoordinates2());
+			  gameStateManager.clear_selections();
 		  }
 		  if(kdown & KEY_X)
 		  {
@@ -256,7 +260,7 @@ int main(int argc, char** argv)
       //start the next round
       tileCounter+=4;
     }
-    kdownOld = kdown;
+	printf("Score: %d", gameStateManager.getBoard1().calculate_score());
   }
   SDL_Quit();				// SDL cleanup
 	return EXIT_SUCCESS;

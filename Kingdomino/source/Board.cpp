@@ -42,7 +42,7 @@ bool Board::check_position(int x_coordinate, int y_coordinate, Terrain terrain)
 	}
 	else if(tileArr[x_coordinate][y_coordinate].getTerrain() == terrain 
 		|| tileArr[x_coordinate][y_coordinate].getTerrain() == Terrain::p1
-		|| tileArr[x_coordinate][y_coordinate].getTerrain() == Terrain::p2)
+		|| tileArr[x_coordinate][y_coordinate].getTerrain() == Terrain::p1)
 	{
 		return true;
 	}
@@ -50,9 +50,9 @@ bool Board::check_position(int x_coordinate, int y_coordinate, Terrain terrain)
 }
 
 void Board::place_domino(Domino domino, Coordinates tile_1_coordinates, Coordinates tile_2_coordinates){
-  tileArr[tile_1_coordinates.getXCoordinate()][tile_1_coordinates.getYCoordinate()]
+  this->tileArr[tile_1_coordinates.getXCoordinate()][tile_1_coordinates.getYCoordinate()]
 	= domino.getTile1();
-  tileArr[tile_2_coordinates.getXCoordinate()][tile_2_coordinates.getYCoordinate()]
+  this->tileArr[tile_2_coordinates.getXCoordinate()][tile_2_coordinates.getYCoordinate()]
 	= domino.getTile2();
 }
 

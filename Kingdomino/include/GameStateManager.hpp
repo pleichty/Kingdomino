@@ -48,12 +48,12 @@ public:
 
 	void set_tile_1_coordinates(Coordinates coordinates)
 	{
-		tile_1_coordinates = coordinates;
+		this->tile_1_coordinates = coordinates;
 	}
 
 	void set_tile_2_coordinates(Coordinates coordinates)
 	{
-		tile_2_coordinates = coordinates;
+		this->tile_2_coordinates = coordinates;
 	}
 
 	Domino get_selected_domino()
@@ -113,6 +113,17 @@ public:
 	{
 		tile_1_coordinates.move_down();
 		tile_2_coordinates.move_down();
+	}
+
+	void clear_selections()
+	{
+		tile_1_coordinates = Coordinates(0, 0);
+		tile_2_coordinates = Coordinates(1, 0);
+		orientation = Orientation::horizontal;
+	}
+
+	void place_domino(Domino domino, Coordinates tile_1_coordinates, Coordinates tile_2_coordinates) {
+		board1.place_domino(domino, tile_1_coordinates, tile_2_coordinates);
 	}
 
 private:
