@@ -1,13 +1,41 @@
 #include "Board.hpp"
 
+struct Score {
+	int id;
+
+};
+
 int Board::calculate_score(){
+  int totalScore = 0;
   for(int x = 0; x < 5; x++){
     for(int y = 0; y < 5; y++){
-
+		if (!tileArr[x][y].isDiscovered()) {
+			Score score = score_tile(x, y, tileArr[x][y].terrain);
+			totalScore += score.crownCount * score.tileCount;
+		}
     }
   }
-  //TODO
-  return 0;
+  return totalScore;
+}
+
+Board::Score Board::score_tile(int x, int y, Terrain terrain) {
+	Board::Score score = Score();
+	if (x < 0 || x > 4 || y < 0 || y > 4 || tileArr[x][y].terrain != terrain) {
+		return score;
+	}
+	if (tileArr[x][y].terrain == terrain) {
+		score.crownCount += tileArr[x][y].getCrownCount();
+		score.tileCount++;
+		tileArr[x][y].set_discovered(true);
+		Board::Score leftScore = score_tile(x - 1, y, terrain);
+		Board::Score rightScore = score_tile(x + 1, y, terrain);
+		Board::Score upScore = score_tile(x, y - 1, terrain);
+		Board::Score downScore = score_tile(x, y + 1, terrain);
+
+		score.crownCount += (leftScore.crownCount + rightScore.crownCount + upScore.crownCount + downScore.crownCount);
+		score.tileCount += (leftScore.tileCount + rightScore.tileCount + upScore.tileCount + downScore.tileCount);
+	}
+	return score;
 }
 
 bool Board::can_place_domino(Domino domino, Coordinates tile_1_coordinates, Coordinates tile_2_coordinates){

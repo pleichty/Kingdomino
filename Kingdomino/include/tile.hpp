@@ -26,6 +26,7 @@ public:
     Tile(Terrain t, int cc){
       terrain = t;
       crownCount = cc;
+	  discovered = false;
     }
 
     Terrain getTerrain(){
@@ -35,6 +36,14 @@ public:
     int getCrownCount(){
       return crownCount;
     };
+
+	bool isDiscovered() {
+		return discovered;
+	}
+
+	void set_discovered(bool disc) {
+		discovered = disc;
+	}
 
     SDL_Texture* getTextureforTile(SDL_Renderer* renderer, SDL_Texture* textures[]){
       if(terrain == Terrain::grass){
@@ -77,9 +86,9 @@ public:
       SDL_RenderCopy(renderer, getTextureforTile(renderer, textures), NULL, &tileDestination);
   }
 
-private:
     Terrain terrain;
     int crownCount; //number of crowns on tile
+	bool discovered;
 };
 
 #endif

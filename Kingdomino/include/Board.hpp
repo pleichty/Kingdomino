@@ -19,11 +19,22 @@ class Board
 {
 public:
 
+	struct Score {
+		int tileCount;
+		int crownCount;
+		Score() {
+			tileCount = 0;
+			crownCount = 0;
+		}
+	};
+
   void place_domino(Domino domino, Coordinates tile_1_coordinates, Coordinates tile_2_coordinates);
   
   void displayBoard(SDL_Renderer* renderer, SDL_Texture* textures[]);
 
   int calculate_score();
+
+  Score score_tile(int x, int y, Terrain terrain);
 
   bool can_place_domino(Domino domino, Coordinates tile_1_coordinates, Coordinates tile_2_coordinates);
 
