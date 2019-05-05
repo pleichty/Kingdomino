@@ -119,9 +119,22 @@ void updateCursorLocation(SDL_Texture* textures[20], SDL_Renderer* renderer, SDL
 
 void render_selected_tile(Domino domino, SDL_Renderer* renderer, Orientation orientation, SDL_Texture* textures[20])
 {
-	//fix this
-	domino.getTile1().printTile(renderer, 50, 50, textures);
-	domino.getTile2().printTile(renderer, 150, 50, textures);
+	if (orientation == Orientation::horizontal) {
+		domino.getTile1().printTile(renderer, 50, 50, textures);
+		domino.getTile2().printTile(renderer, 150, 50, textures);
+	}
+	else if (orientation == Orientation::vertical) {
+		domino.getTile1().printTile(renderer, 75, 50, textures);
+		domino.getTile2().printTile(renderer, 75, 150, textures);
+	}
+	else if (orientation == Orientation::horizontal_reverse) {
+		domino.getTile1().printTile(renderer, 150, 50, textures);
+		domino.getTile2().printTile(renderer, 50, 50, textures);
+	}
+	else if (orientation == Orientation::vertical_flipped) {
+		domino.getTile1().printTile(renderer, 75, 150, textures);
+		domino.getTile2().printTile(renderer, 75, 50, textures);
+	}
 }
 
 int main(int argc, char** argv)
@@ -171,10 +184,10 @@ int main(int argc, char** argv)
     hidScanInput();
     kdown = hidKeysDown(CONTROLLER_P1_AUTO);
 
-    if(kdown > kdownOld && (kdown & KEY_PLUS))
+    if(kdown & KEY_PLUS)
       break;
 
-    if(kdown > kdownOld && (kdown & KEY_A  && tileCounter < 48)){
+    if(tileCounter < 48){
       SDL_RenderClear(renderer);
       SDL_RenderCopy(renderer, bg_texture, NULL, NULL);
       Domino dominoSelection[4] = {
@@ -252,7 +265,11 @@ int main(int argc, char** argv)
 		  }
 		  if(kdown & KEY_X)
 		  {
-			  //TODO rotate
+			  gameStateManager.update_orientation();
+		  }
+		  if (kdown & KEY_B) {
+			  decision_made = true;
+			  gameStateManager.clear_selections();
 		  }
 
       }

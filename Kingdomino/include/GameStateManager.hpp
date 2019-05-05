@@ -126,6 +126,31 @@ public:
 		board1.place_domino(domino, tile_1_coordinates, tile_2_coordinates);
 	}
 
+	void update_orientation() {
+		if (orientation == Orientation::horizontal && tile_1_coordinates.y_coordinate < 4) {
+			orientation = Orientation::vertical;
+			tile_2_coordinates.x_coordinate -= 1;
+			tile_2_coordinates.y_coordinate += 1;
+			
+		}
+		else if (orientation == Orientation::vertical && tile_1_coordinates.x_coordinate > 0) {
+			orientation = Orientation::horizontal_reverse;
+			tile_2_coordinates.x_coordinate -= 1;
+			tile_2_coordinates.y_coordinate -= 1;
+		}
+		else if (orientation == Orientation::horizontal_reverse && tile_1_coordinates.y_coordinate > 0) {
+			orientation = Orientation::vertical_flipped;
+			tile_2_coordinates.x_coordinate += 1;
+			tile_2_coordinates.y_coordinate -= 1;
+		}
+		else if(orientation == Orientation::vertical_flipped && tile_1_coordinates.x_coordinate < 4){
+			orientation = Orientation::horizontal;
+			tile_2_coordinates.x_coordinate += 1;
+			tile_2_coordinates.y_coordinate += 1;
+
+		}
+	}
+
 private:
 	Board board1;
 	Board board2;

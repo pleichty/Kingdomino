@@ -52,7 +52,6 @@ public:
 		y_coordinate += 1;
 	}
 
-private:
 	int x_coordinate;
 	int y_coordinate;
 };
