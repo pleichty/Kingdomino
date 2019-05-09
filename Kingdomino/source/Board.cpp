@@ -1,9 +1,5 @@
 #include "Board.hpp"
 
-int Board::calculate_score() {
-	return 0;
-}
-/*
 int Board::calculate_score(){
   int totalScore = 0;
   for(int x = 0; x < 5; x++){
@@ -19,7 +15,7 @@ int Board::calculate_score(){
 
 Score Board::score_tile(int x, int y, Terrain terrain) {
 	Score score = Score();
-	if (x < 0 || x > 4 || y < 0 || y > 4 || tileArr[x][y].terrain != terrain) {
+	if (x < 0 || x > 4 || y < 0 || y > 4 || tileArr[x][y].terrain != terrain || tileArr[x][y].discovered == true) {
 		return score;
 	}
 	if (tileArr[x][y].terrain == terrain) {
@@ -36,7 +32,7 @@ Score Board::score_tile(int x, int y, Terrain terrain) {
 	}
 	return score;
 }
-*/
+
 bool Board::can_place_domino(Domino domino, Coordinates tile_1_coordinates, Coordinates tile_2_coordinates){
   if(tileArr[tile_1_coordinates.getXCoordinate()][tile_1_coordinates.getYCoordinate()].getTerrain() != Terrain::empty
 	  || tileArr[tile_2_coordinates.getXCoordinate()][tile_2_coordinates.getYCoordinate()].getTerrain() != Terrain::empty)

@@ -277,7 +277,11 @@ int main(int argc, char** argv)
       //start the next round
       tileCounter+=4;
     }
+	SDL_RenderClear(renderer);
+	SDL_RenderCopy(renderer, bg_texture, nullptr, nullptr);
+	gameStateManager.getBoard1().displayBoard(renderer, textures);
 	printf("Score: %d", gameStateManager.getBoard1().calculate_score());
+	SDL_RenderPresent(renderer);
   }
   SDL_Quit();				// SDL cleanup
 	return EXIT_SUCCESS;
