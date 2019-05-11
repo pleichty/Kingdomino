@@ -90,6 +90,9 @@ void loadTilePictures(SDL_Renderer* renderer, SDL_Texture* textures[], SDL_Surfa
   surfaces[10] = IMG_Load("romfs:/resources/images/overlay_green.png");
   surfaces[11] = IMG_Load("romfs:/resources/images/overlay_red.png");
   surfaces[12] = IMG_Load("romfs:/resources/images/empty_tile.png");
+  surfaces[13] = IMG_Load("romfs:/resources/images/crown1.png");
+  surfaces[14] = IMG_Load("romfs:/resources/images/crown2.png");
+  surfaces[15] = IMG_Load("romfs:/resources/images/crown3.png");
   textures[0] = SDL_CreateTextureFromSurface(renderer, surfaces[0]);
   textures[1] = SDL_CreateTextureFromSurface(renderer, surfaces[1]);
   textures[2] = SDL_CreateTextureFromSurface(renderer, surfaces[2]);
@@ -103,6 +106,9 @@ void loadTilePictures(SDL_Renderer* renderer, SDL_Texture* textures[], SDL_Surfa
   textures[10] = SDL_CreateTextureFromSurface(renderer, surfaces[10]);
   textures[11] = SDL_CreateTextureFromSurface(renderer, surfaces[11]);
   textures[12] = SDL_CreateTextureFromSurface(renderer, surfaces[12]);
+  textures[13] = SDL_CreateTextureFromSurface(renderer, surfaces[13]);
+  textures[14] = SDL_CreateTextureFromSurface(renderer, surfaces[14]);
+  textures[15] = SDL_CreateTextureFromSurface(renderer, surfaces[15]);
 }
 
 void updateCursorLocation(SDL_Texture* textures[20], SDL_Renderer* renderer, SDL_Texture* bg_texture, Domino dominoSelection[4], SDL_Rect cursorDestination)

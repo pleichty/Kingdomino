@@ -82,8 +82,24 @@ public:
       tileDestination.w = 100;
       tileDestination.h = 100;
 
+	  SDL_Rect crownDestination;
+	  crownDestination.x = x + 75;
+	  crownDestination.y = y;
+	  crownDestination.w = 25;
+	  crownDestination.h = 25;
+
+
       // Copy bg texture to renderer:
       SDL_RenderCopy(renderer, getTextureforTile(renderer, textures), NULL, &tileDestination);
+	  if (crownCount == 1) {
+		  SDL_RenderCopy(renderer, textures[13], NULL, &crownDestination);
+	  }
+	  else if (crownCount == 2) {
+		  SDL_RenderCopy(renderer, textures[14], NULL, &crownDestination);
+	  }
+	  else if (crownCount == 3) {
+		  SDL_RenderCopy(renderer, textures[15], NULL, &crownDestination);
+	  }
   }
 
     Terrain terrain;
