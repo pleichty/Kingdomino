@@ -109,6 +109,10 @@ void loadTilePictures(SDL_Renderer* renderer, SDL_Texture* textures[], SDL_Surfa
   textures[13] = SDL_CreateTextureFromSurface(renderer, surfaces[13]);
   textures[14] = SDL_CreateTextureFromSurface(renderer, surfaces[14]);
   textures[15] = SDL_CreateTextureFromSurface(renderer, surfaces[15]);
+
+  for (int i = 0; i < 16; i++) {
+	  SDL_FreeSurface(surfaces[i]);
+  }
 }
 
 void updateCursorLocation(SDL_Texture* textures[20], SDL_Renderer* renderer, SDL_Texture* bg_texture, Domino dominoSelection[4], SDL_Rect cursorDestination)
@@ -145,20 +149,28 @@ void render_selected_tile(Domino domino, SDL_Renderer* renderer, Orientation ori
 
 int main(int argc, char** argv)
 {
-
-	//consoleInit(nullptr); //Init the console
+	SDL_Init(SDL_INIT_EVERYTHING);
+	IMG_Init(IMG_INIT_PNG);
+	TTF_Init();
+	romfsInit();
+	consoleInit(nullptr); //Init the console
 	bool decision_made = false;
 
   SDL_Texture* textures[20];
   SDL_Surface* surfaces[20];
 
+  TTF_Font* font;
+  TTF_Font* font48;
+
+  font = TTF_OpenFont("romfs:/resources/fonts/MiniSet2.ttf", 24);
+  font48 = TTF_OpenFont("romfs:/resources/fonts/MiniSet2.ttf", 144);
+
   u32 kdown = 0x00000000;
   u32 kdownOld = 0x00000000;
 
-  SDL_Init(SDL_INIT_EVERYTHING);
-  IMG_Init(IMG_INIT_PNG);
-  TTF_Init();
-  romfsInit();
+
+
+
 
   // Create an SDL window & renderer
   SDL_Window* window = SDL_CreateWindow("Main-Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP);
@@ -283,11 +295,24 @@ int main(int argc, char** argv)
       //start the next round
       tileCounter+=4;
     }
+	
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer, bg_texture, nullptr, nullptr);
 	gameStateManager.getBoard1().displayBoard(renderer, textures);
-	printf("Score: %d", gameStateManager.getBoard1().calculate_score());
+	std::string score_text = "score: " + std::to_string(gameStateManager.getBoard1().calculate_score());
+	
+	SDL_Color textColor = { 255, 255, 255, 0 };
+	SDL_Surface* textSurface = TTF_RenderText_Solid(font, score_text.c_str(), textColor);
+	SDL_Texture* text = SDL_CreateTextureFromSurface(renderer, textSurface);
+	int text_width = textSurface->w;
+	int text_height = textSurface->h;
+	SDL_FreeSurface(textSurface);
+	
+	SDL_Rect renderQuad = { 20, 720 - 30, text_width, text_height };
+	SDL_RenderCopy(renderer, text, NULL, &renderQuad);
+	SDL_DestroyTexture(text);
 	SDL_RenderPresent(renderer);
+	
   }
   SDL_Quit();				// SDL cleanup
 	return EXIT_SUCCESS;
