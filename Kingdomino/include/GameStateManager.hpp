@@ -6,12 +6,23 @@
 #include <string>
 #include "Board.hpp"
 #include "Coordinates.hpp"
+#include "Order.hpp"
 
 enum class Orientation{horizontal, vertical, horizontal_reverse, vertical_flipped};
 
 class GameStateManager
 {
 public:
+	Board board1;
+	Board board2;
+	Coordinates tile_1_coordinates;
+	Coordinates tile_2_coordinates;
+	Orientation orientation;
+	Domino selected_domino_1;
+	Domino selected_domino_2;
+	Domino selected_domino_3;
+	Domino selected_domino_4;
+	Order order;
 	const int x_start = 300;
 	const int y_start = 150;
 
@@ -21,6 +32,7 @@ public:
 		tile_1_coordinates = Coordinates(0,0);
 		tile_2_coordinates = Coordinates(1,0);
 		orientation = Orientation::horizontal;
+		order = Order();
 	}
 
 	Board getBoard1() {
@@ -56,14 +68,61 @@ public:
 		this->tile_2_coordinates = coordinates;
 	}
 
-	Domino get_selected_domino()
+	Domino get_domino_for_player(int player)
 	{
-		return selected_domino;
+		switch (player) {
+		case 1:
+			return selected_domino_1;
+		case 2:
+			return selected_domino_2;
+		default:
+			return selected_domino_1;
+			/*
+		case 3:
+			return selected_domino_3;
+		case 4:
+			return selected_domino_4;
+		}
+		*/
+		}
 	}
 
-	void set_selected_domino(Domino domino)
+	void set_domino_for_player(Domino domino, int player)
 	{
-		this->selected_domino = domino;
+		switch (player) {
+		case 1:
+			selected_domino_1 = domino;
+		case 2:
+			selected_domino_2 = domino;
+
+		default:
+			selected_domino_1 = domino;
+			/*
+		case 3:
+			selected_domino_3 = domino;
+		case 4:
+			selected_domino_4 = domino;
+		}
+		*/
+		}
+	}
+
+	Board get_board_for_player(int player) {
+		switch (player) {
+		case 1:
+			return board1;
+		case 2:
+			return board2;
+		default:
+			return board1;
+			/*
+		case 3:
+			return nullptr;
+		case 4:
+			return nullptr;
+		}
+		*/
+		}
 	}
 
 	void display_overlay(SDL_Renderer* renderer, struct SDL_Texture* textures[20])
@@ -79,7 +138,7 @@ public:
 		tile_position_2.w = 100;
 		tile_position_2.h = 100;
 		//TODO which board
-		if(board1.can_place_domino(selected_domino, tile_1_coordinates, tile_2_coordinates))
+		if(get_board_for_player(order.current_player).can_place_domino(get_domino_for_player(order.current_player), tile_1_coordinates, tile_2_coordinates))
 		{
 			SDL_RenderCopy(renderer, textures[10], nullptr, &tile_position_1);
 			SDL_RenderCopy(renderer, textures[10], nullptr, &tile_position_2);
@@ -123,7 +182,7 @@ public:
 	}
 
 	void place_domino(Domino domino, Coordinates tile_1_coordinates, Coordinates tile_2_coordinates) {
-		board1.place_domino(domino, tile_1_coordinates, tile_2_coordinates);
+		get_board_for_player(order.current_player).place_domino(domino, tile_1_coordinates, tile_2_coordinates);
 	}
 
 	void update_orientation() {
@@ -151,13 +210,12 @@ public:
 		}
 	}
 
-private:
-	Board board1;
-	Board board2;
-	Coordinates tile_1_coordinates;
-	Coordinates tile_2_coordinates;
-	Orientation orientation;
-	Domino selected_domino;
+	void update_order(int first, int second, int third, int fourth) {
+		order.first_player = first;
+		order.second_player = second;
+		order.third_player = third;
+		order.fourth_player = fourth;
+	}
 };
 
 #endif

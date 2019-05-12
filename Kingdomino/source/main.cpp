@@ -19,6 +19,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
+#include "main.h"
 
 #define SCREEN_W 1280
 #define SCREEN_H 720
@@ -166,11 +167,6 @@ int main(int argc, char** argv)
   font48 = TTF_OpenFont("romfs:/resources/fonts/MiniSet2.ttf", 144);
 
   u32 kdown = 0x00000000;
-  u32 kdownOld = 0x00000000;
-
-
-
-
 
   // Create an SDL window & renderer
   SDL_Window* window = SDL_CreateWindow("Main-Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP);
@@ -205,50 +201,8 @@ int main(int argc, char** argv)
     if(kdown & KEY_PLUS)
       break;
 
-    if(tileCounter < 48){
-      SDL_RenderClear(renderer);
-      SDL_RenderCopy(renderer, bg_texture, NULL, NULL);
-      Domino dominoSelection[4] = {
-         stack[tileNumbers[tileCounter]]
-        ,stack[tileNumbers[tileCounter+1]]
-        ,stack[tileNumbers[tileCounter+2]]
-        ,stack[tileNumbers[tileCounter+3]]
-      };
-      dominoSelection[0].printDominoForSelection(renderer, 1, textures);
-      dominoSelection[1].printDominoForSelection(renderer, 2, textures);
-      dominoSelection[2].printDominoForSelection(renderer, 3, textures);
-      dominoSelection[3].printDominoForSelection(renderer, 4, textures);
-      //display cursor at tile 1
-      SDL_Rect cursorDestination;
-      cursorDestination.x = 400;
-      cursorDestination.y = 150;
-      cursorDestination.w = 80;
-      cursorDestination.h = 60;
-      SDL_RenderCopy(renderer, textures[6], nullptr, &cursorDestination);
-      SDL_RenderPresent(renderer);
-
-	  decision_made = false;
-      int dominoNumberSelected = 1;
-      //wait until user makes decision on domino to pick
-      while(!decision_made)
-      {
-        hidScanInput();
-        kdown = hidKeysDown(CONTROLLER_P1_AUTO);
-        if(kdown & KEY_UP && (dominoNumberSelected > 1)){
-          dominoNumberSelected -= 1;
-          cursorDestination.y -= 100;
-		  updateCursorLocation(textures, renderer, bg_texture, dominoSelection, cursorDestination);
-        }
-        if(kdown & KEY_DOWN && (dominoNumberSelected < 4)){
-          dominoNumberSelected += 1;
-          cursorDestination.y += 100;
-          updateCursorLocation(textures, renderer, bg_texture, dominoSelection, cursorDestination);
-        }
-        if(kdown & KEY_A){
-			decision_made = true;
-		  gameStateManager.set_selected_domino(dominoSelection[dominoNumberSelected - 1]);
-        }
-      }
+    while(tileCounter < 48){
+		pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.first_player);
       //TODO 2nd player stuff
 
       //load board, and move new domino around it
@@ -316,4 +270,51 @@ int main(int argc, char** argv)
   }
   SDL_Quit();				// SDL cleanup
 	return EXIT_SUCCESS;
+}
+
+void pickTile(SDL_Renderer * renderer, SDL_Texture * bg_texture, int  tileNumbers[48], int tileCounter, SDL_Texture * textures[20], GameStateManager &gameStateManager, int player)
+{
+	SDL_RenderClear(renderer);
+	SDL_RenderCopy(renderer, bg_texture, NULL, NULL);
+	Domino dominoSelection[4] = {
+		stack[tileNumbers[tileCounter]]
+		,stack[tileNumbers[tileCounter + 1]]
+		,stack[tileNumbers[tileCounter + 2]]
+		,stack[tileNumbers[tileCounter + 3]]
+	};
+	dominoSelection[0].printDominoForSelection(renderer, 1, textures);
+	dominoSelection[1].printDominoForSelection(renderer, 2, textures);
+	dominoSelection[2].printDominoForSelection(renderer, 3, textures);
+	dominoSelection[3].printDominoForSelection(renderer, 4, textures);
+	//display cursor at tile 1
+	SDL_Rect cursorDestination;
+	cursorDestination.x = 400;
+	cursorDestination.y = 150;
+	cursorDestination.w = 80;
+	cursorDestination.h = 60;
+	SDL_RenderCopy(renderer, textures[6], nullptr, &cursorDestination);
+	SDL_RenderPresent(renderer);
+
+	int dominoNumberSelected = 1;
+	u32 kdown = 0x00000000;
+	//wait until user makes decision on domino to pick
+	while (true)
+	{
+		hidScanInput();
+		kdown = hidKeysDown(CONTROLLER_P1_AUTO);
+		if (kdown & KEY_UP && (dominoNumberSelected > 1)) {
+			dominoNumberSelected -= 1;
+			cursorDestination.y -= 100;
+			updateCursorLocation(textures, renderer, bg_texture, dominoSelection, cursorDestination);
+		}
+		if (kdown & KEY_DOWN && (dominoNumberSelected < 4)) {
+			dominoNumberSelected += 1;
+			cursorDestination.y += 100;
+			updateCursorLocation(textures, renderer, bg_texture, dominoSelection, cursorDestination);
+		}
+		if (kdown & KEY_A) {
+			gameStateManager.set_domino_for_player(dominoSelection[dominoNumberSelected - 1], player);
+			break;
+		}
+	}
 }
