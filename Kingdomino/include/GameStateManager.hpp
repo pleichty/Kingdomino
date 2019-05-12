@@ -182,7 +182,12 @@ public:
 	}
 
 	void place_domino(Domino domino, Coordinates tile_1_coordinates, Coordinates tile_2_coordinates) {
-		get_board_for_player(order.current_player).place_domino(domino, tile_1_coordinates, tile_2_coordinates);
+		if (order.current_player == 1) {
+			board1.place_domino(domino, tile_1_coordinates, tile_2_coordinates);
+		}
+		else {
+			board2.place_domino(domino, tile_1_coordinates, tile_2_coordinates);
+		}
 	}
 
 	void update_orientation() {
