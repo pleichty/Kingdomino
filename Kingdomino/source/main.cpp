@@ -148,7 +148,7 @@ void render_selected_tile(Domino domino, SDL_Renderer* renderer, Orientation ori
 	}
 }
 
-void pickTile(SDL_Renderer * renderer, SDL_Texture * bg_texture, int  tileNumbers[48], int tileCounter, SDL_Texture * textures[20], GameStateManager &gameStateManager, int player)
+int pickTile(SDL_Renderer * renderer, SDL_Texture * bg_texture, int  tileNumbers[48], int tileCounter, SDL_Texture * textures[20], GameStateManager &gameStateManager, int player)
 {
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer, bg_texture, NULL, NULL);
@@ -193,6 +193,7 @@ void pickTile(SDL_Renderer * renderer, SDL_Texture * bg_texture, int  tileNumber
 			break;
 		}
 	}
+	return dominoNumberSelected;
 }
 
 void placeTile(bool &decision_made, SDL_Renderer * renderer, SDL_Texture * bg_texture, GameStateManager &gameStateManager, SDL_Texture * textures[20], int player)
@@ -291,12 +292,16 @@ int main(int argc, char** argv)
     if(kdown & KEY_PLUS)
       break;
 
+	int firstTilePicked = pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.first_player);
+	int secondTilePicked = pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.second_player);
+	gameStateManager.update_order(firstTilePicked, secondTilePicked, 0, 0);
     while(tileCounter < 48){
-		pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.first_player);
-      //TODO 2nd player stuff
+
+
 
       //load board, and move new domino around it
 	  placeTile(decision_made, renderer, bg_texture, gameStateManager, textures, gameStateManager.order.first_player);
+	  placeTile(decision_made, renderer, bg_texture, gameStateManager, textures, gameStateManager.order.second_player);
 
       //start the next round
       tileCounter+=4;

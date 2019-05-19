@@ -215,11 +215,19 @@ public:
 		}
 	}
 
-	void update_order(int first, int second, int third, int fourth) {
-		order.first_player = first;
-		order.second_player = second;
-		order.third_player = third;
-		order.fourth_player = fourth;
+	/*
+		takes in the tile selected by 1st/2nd/... players and calculates the new position of players
+	*/
+	void update_order(int firstPlayersTile, int secondPlayersTile, int thirdPlayersTile, int fourthPlayersTile) {
+		// if the 1st players tile is less than the 2nd, then they should go first next round, otherwise 2nd.
+		if (firstPlayersTile < secondPlayersTile) {
+			order.first_player = 1;
+			order.second_player = 2;
+		}
+		else {
+			order.first_player = 2;
+			order.second_player = 1;
+		}
 	}
 };
 
