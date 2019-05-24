@@ -196,8 +196,11 @@ int pickTile(SDL_Renderer * renderer, SDL_Texture * bg_texture, int  tileNumbers
 	return dominoNumberSelected;
 }
 
-void placeTile(bool &decision_made, SDL_Renderer * renderer, SDL_Texture * bg_texture, GameStateManager &gameStateManager, SDL_Texture * textures[20], int player)
+int placeTile(bool &decision_made, SDL_Renderer * renderer, SDL_Texture * bg_texture, GameStateManager &gameStateManager, SDL_Texture * textures[20], int player, int tileCounter)
 {
+	if (tileCounter < 48) {
+
+	}
 	u32 kdown = 0x00000000;
 	while (true) {
 		SDL_RenderClear(renderer);
@@ -237,6 +240,7 @@ void placeTile(bool &decision_made, SDL_Renderer * renderer, SDL_Texture * bg_te
 		}
 
 	}
+	return 0;
 }
 
 int main(int argc, char** argv)
@@ -293,15 +297,16 @@ int main(int argc, char** argv)
       break;
 
 	int firstTilePicked = pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.first_player);
+	gameStateManager.update_current_player();
 	int secondTilePicked = pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.second_player);
-	gameStateManager.update_order(firstTilePicked, secondTilePicked, 0, 0);
+	gameStateManager.update_order(firstTilePicked, secondTilePicked);
     while(tileCounter < 48){
 
-
-
       //load board, and move new domino around it
-	  placeTile(decision_made, renderer, bg_texture, gameStateManager, textures, gameStateManager.order.first_player);
-	  placeTile(decision_made, renderer, bg_texture, gameStateManager, textures, gameStateManager.order.second_player);
+	  firstTilePicked = placeTile(decision_made, renderer, bg_texture, gameStateManager, textures, gameStateManager.order.first_player, tileCounter);
+	  gameStateManager.update_current_player();
+	  secondTilePicked = placeTile(decision_made, renderer, bg_texture, gameStateManager, textures, gameStateManager.order.second_player, tileCounter);
+	  gameStateManager.update_order(firstTilePicked, secondTilePicked);
 
       //start the next round
       tileCounter+=4;
