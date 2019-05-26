@@ -148,7 +148,7 @@ void render_selected_tile(Domino domino, SDL_Renderer* renderer, Orientation ori
 	}
 }
 
-int pickTile(SDL_Renderer * renderer, SDL_Texture * bg_texture, int  tileNumbers[48], int tileCounter, SDL_Texture * textures[20], GameStateManager &gameStateManager, int player)
+int pickTile(SDL_Renderer * renderer, SDL_Texture * bg_texture, int  tileNumbers[48], int tileCounter, SDL_Texture * textures[20], GameStateManager &gameStateManager, int player, int firstPlayersTile)
 {
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer, bg_texture, NULL, NULL);
@@ -178,14 +178,26 @@ int pickTile(SDL_Renderer * renderer, SDL_Texture * bg_texture, int  tileNumbers
 	{
 		hidScanInput();
 		kdown = hidKeysDown(CONTROLLER_P1_AUTO);
-		if (kdown & KEY_UP && (dominoNumberSelected > 1)) {
-			dominoNumberSelected -= 1;
-			cursorDestination.y -= 100;
+		if (kdown & KEY_UP && (dominoNumberSelected > 1 && firstPlayersTile != 1) ) {
+			if (dominoNumberSelected == firstPlayersTile) {
+				dominoNumberSelected -= 2;
+				cursorDestination.y -= 200;
+			}
+			else {
+				dominoNumberSelected -= 1;
+				cursorDestination.y -= 100;
+			}
 			updateCursorLocation(textures, renderer, bg_texture, dominoSelection, cursorDestination);
 		}
-		if (kdown & KEY_DOWN && (dominoNumberSelected < 4)) {
-			dominoNumberSelected += 1;
-			cursorDestination.y += 100;
+		if (kdown & KEY_DOWN && (dominoNumberSelected < 4 && firstPlayersTile != 4)) {
+			if (dominoNumberSelected == firstPlayersTile) {
+				dominoNumberSelected += 2;
+				cursorDestination.y += 200;
+			}
+			else {
+				dominoNumberSelected += 1;
+				cursorDestination.y += 100;
+			}
 			updateCursorLocation(textures, renderer, bg_texture, dominoSelection, cursorDestination);
 		}
 		if (kdown & KEY_A) {
@@ -297,9 +309,9 @@ int main(int argc, char** argv)
     if(kdown & KEY_PLUS)
       break;
 
-	int firstTilePicked = pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.first_player);
+	int firstTilePicked = pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.first_player, 0);
 	gameStateManager.update_current_player();
-	int secondTilePicked = pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.second_player);
+	int secondTilePicked = pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.second_player, firstTilePicked);
 	gameStateManager.update_order(firstTilePicked, secondTilePicked);
     while(tileCounter < 48){
 
