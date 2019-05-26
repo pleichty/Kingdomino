@@ -196,10 +196,10 @@ int pickTile(SDL_Renderer * renderer, SDL_Texture * bg_texture, int  tileNumbers
 	return dominoNumberSelected;
 }
 
-int placeTile(bool &decision_made, SDL_Renderer * renderer, SDL_Texture * bg_texture, GameStateManager &gameStateManager, SDL_Texture * textures[20], int player, int tileCounter)
+int placeTile(bool &decision_made, SDL_Renderer * renderer, SDL_Texture * bg_texture, GameStateManager &gameStateManager, SDL_Texture * textures[20], int player, int tileCounter, int firstPlayersPick)
 {
-	if (tileCounter < 48) {
-
+	if (tileCounter < 44) {
+		//show tiles on right side
 	}
 	u32 kdown = 0x00000000;
 	while (true) {
@@ -240,6 +240,7 @@ int placeTile(bool &decision_made, SDL_Renderer * renderer, SDL_Texture * bg_tex
 		}
 
 	}
+	//pick next tile, return selected tile
 	return 0;
 }
 
@@ -303,9 +304,9 @@ int main(int argc, char** argv)
     while(tileCounter < 48){
 
       //load board, and move new domino around it
-	  firstTilePicked = placeTile(decision_made, renderer, bg_texture, gameStateManager, textures, gameStateManager.order.first_player, tileCounter);
+	  firstTilePicked = placeTile(decision_made, renderer, bg_texture, gameStateManager, textures, gameStateManager.order.first_player, tileCounter, 0);
 	  gameStateManager.update_current_player();
-	  secondTilePicked = placeTile(decision_made, renderer, bg_texture, gameStateManager, textures, gameStateManager.order.second_player, tileCounter);
+	  secondTilePicked = placeTile(decision_made, renderer, bg_texture, gameStateManager, textures, gameStateManager.order.second_player, tileCounter, firstTilePicked);
 	  gameStateManager.update_order(firstTilePicked, secondTilePicked);
 
       //start the next round
@@ -315,18 +316,34 @@ int main(int argc, char** argv)
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer, bg_texture, nullptr, nullptr);
 	gameStateManager.getBoard1().displayBoard(renderer, textures);
-	std::string score_text = "score: " + std::to_string(gameStateManager.getBoard1().calculate_score());
+	int player1Score = gameStateManager.getBoard1().calculate_score();
+	int player2Score = gameStateManager.getBoard2().calculate_score();
+	std::string player_1_score_text = "score: " + std::to_string(player1Score);
+	std::string player_2_score_text = "score: " + std::to_string(player2Score);
+
 	
 	SDL_Color textColor = { 255, 255, 255, 0 };
-	SDL_Surface* textSurface = TTF_RenderText_Solid(font, score_text.c_str(), textColor);
+
+	SDL_Surface* textSurface = TTF_RenderText_Solid(font, player_1_score_text.c_str(), textColor);
 	SDL_Texture* text = SDL_CreateTextureFromSurface(renderer, textSurface);
 	int text_width = textSurface->w;
 	int text_height = textSurface->h;
 	SDL_FreeSurface(textSurface);
-	
 	SDL_Rect renderQuad = { 20, 720 - 30, text_width, text_height };
 	SDL_RenderCopy(renderer, text, NULL, &renderQuad);
+
+	SDL_Surface* textSurface2 = TTF_RenderText_Solid(font, player_2_score_text.c_str(), textColor);
+	SDL_Texture* text2 = SDL_CreateTextureFromSurface(renderer, textSurface2);
+	int text_width2 = textSurface2->w;
+	int text_height2 = textSurface2->h;
+	SDL_FreeSurface(textSurface2);
+	SDL_Rect renderQuad2 = { 1000, 720 - 30, text_width2, text_height2 };
+	SDL_RenderCopy(renderer, text2, NULL, &renderQuad2);
+
+	
+
 	SDL_DestroyTexture(text);
+	SDL_DestroyTexture(text2);
 	SDL_RenderPresent(renderer);
 	
   }
