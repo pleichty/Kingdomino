@@ -219,15 +219,28 @@ int pickTile(SDL_Renderer * renderer, SDL_Texture * bg_texture, int  tileNumbers
 	return dominoNumberSelected;
 }
 
-int placeTile(bool &decision_made, SDL_Renderer * renderer, SDL_Texture * bg_texture, GameStateManager &gameStateManager, SDL_Texture * textures[20], int player, int tileCounter, int firstPlayersPick)
+void placeTile(bool &decision_made, SDL_Renderer * renderer, SDL_Texture * bg_texture, GameStateManager &gameStateManager, SDL_Texture * textures[20], int player, int tileCounter,int  tileNumbers[48])
 {
-	if (tileCounter < 44) {
-		//show tiles on right side
-	}
 	u32 kdown = 0x00000000;
 	while (true) {
 		SDL_RenderClear(renderer);
 		SDL_RenderCopy(renderer, bg_texture, nullptr, nullptr);
+
+		//display next tiles on the right side
+		if (tileCounter < 44) {
+			Domino dominoSelection[4] = {
+		stack[tileNumbers[tileCounter]]
+		,stack[tileNumbers[tileCounter + 1]]
+		,stack[tileNumbers[tileCounter + 2]]
+		,stack[tileNumbers[tileCounter + 3]]
+			};
+			dominoSelection[0].printDominoForSelection(renderer, 1, textures);
+			dominoSelection[1].printDominoForSelection(renderer, 2, textures);
+			dominoSelection[2].printDominoForSelection(renderer, 3, textures);
+			dominoSelection[3].printDominoForSelection(renderer, 4, textures);
+		}
+
+
 		render_selected_tile(gameStateManager.get_domino_for_player(player), renderer, gameStateManager.get_orientation(), textures);
 		gameStateManager.getBoard1().displayBoard(renderer, textures);
 		gameStateManager.display_overlay(renderer, textures);
@@ -263,8 +276,6 @@ int placeTile(bool &decision_made, SDL_Renderer * renderer, SDL_Texture * bg_tex
 		}
 
 	}
-	//pick next tile, return selected tile
-	return 0;
 }
 
 int main(int argc, char** argv)
@@ -327,9 +338,12 @@ int main(int argc, char** argv)
     while(tileCounter < 48){
 
       //load board, and move new domino around it
-	  firstTilePicked = placeTile(decision_made, renderer, bg_texture, gameStateManager, textures, gameStateManager.order.first_player, tileCounter, 0);
+	  placeTile(decision_made, renderer, bg_texture, gameStateManager, textures, gameStateManager.order.first_player, tileCounter, tileNumbers);
+	  firstTilePicked = pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.first_player, 0);
 	  gameStateManager.update_current_player();
-	  secondTilePicked = placeTile(decision_made, renderer, bg_texture, gameStateManager, textures, gameStateManager.order.second_player, tileCounter, firstTilePicked);
+	  
+	  placeTile(decision_made, renderer, bg_texture, gameStateManager, textures, gameStateManager.order.second_player, tileCounter, tileNumbers);
+	  secondTilePicked = pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.second_player, firstTilePicked);
 	  gameStateManager.update_order(firstTilePicked, secondTilePicked);
 
       //start the next round
