@@ -116,7 +116,7 @@ void loadTilePictures(SDL_Renderer* renderer, SDL_Texture* textures[], SDL_Surfa
   }
 }
 
-void updateCursorLocation(SDL_Texture* textures[20], SDL_Renderer* renderer, SDL_Texture* bg_texture, Domino dominoSelection[4], SDL_Rect cursorDestination)
+void updateCursorLocation(SDL_Texture* textures[20], SDL_Renderer* renderer, SDL_Texture* bg_texture, Domino dominoSelection[4], SDL_Rect cursorDestination, GameStateManager &gameStateManager, int player)
 {
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer, bg_texture, nullptr, nullptr);
@@ -125,6 +125,7 @@ void updateCursorLocation(SDL_Texture* textures[20], SDL_Renderer* renderer, SDL
 	dominoSelection[2].printDominoForSelection(renderer, 3, textures);
 	dominoSelection[3].printDominoForSelection(renderer, 4, textures);
 	SDL_RenderCopy(renderer, textures[6], nullptr, &cursorDestination);
+	gameStateManager.get_board_for_player(player).displayBoard(renderer, textures);
 	SDL_RenderPresent(renderer);
 }
 
@@ -169,9 +170,19 @@ int pickTile(SDL_Renderer * renderer, SDL_Texture * bg_texture, int  tileNumbers
 	cursorDestination.w = 80;
 	cursorDestination.h = 60;
 	SDL_RenderCopy(renderer, textures[6], nullptr, &cursorDestination);
+	gameStateManager.get_board_for_player(player).displayBoard(renderer, textures);
 	SDL_RenderPresent(renderer);
+	
 
-	int dominoNumberSelected = 1;
+	int dominoNumberSelected;
+
+	if (firstPlayersTile == 1) {
+		dominoNumberSelected = 2;
+	}
+	else {
+		dominoNumberSelected = 1;
+	}
+
 	u32 kdown = 0x00000000;
 	//wait until user makes decision on domino to pick
 	while (true)
@@ -187,7 +198,7 @@ int pickTile(SDL_Renderer * renderer, SDL_Texture * bg_texture, int  tileNumbers
 				dominoNumberSelected -= 1;
 				cursorDestination.y -= 100;
 			}
-			updateCursorLocation(textures, renderer, bg_texture, dominoSelection, cursorDestination);
+			updateCursorLocation(textures, renderer, bg_texture, dominoSelection, cursorDestination, gameStateManager, player);
 		}
 		if (kdown & KEY_DOWN && (dominoNumberSelected < 4 && firstPlayersTile != 4)) {
 			if (dominoNumberSelected == firstPlayersTile) {
@@ -198,7 +209,7 @@ int pickTile(SDL_Renderer * renderer, SDL_Texture * bg_texture, int  tileNumbers
 				dominoNumberSelected += 1;
 				cursorDestination.y += 100;
 			}
-			updateCursorLocation(textures, renderer, bg_texture, dominoSelection, cursorDestination);
+			updateCursorLocation(textures, renderer, bg_texture, dominoSelection, cursorDestination, gameStateManager, player);
 		}
 		if (kdown & KEY_A) {
 			gameStateManager.set_domino_for_player(dominoSelection[dominoNumberSelected - 1], player);
