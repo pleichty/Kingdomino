@@ -47,7 +47,12 @@ public:
       tileArr[1][4] = Tile(Terrain::empty, 0);
       tileArr[2][0] = Tile(Terrain::empty, 0);
       tileArr[2][1] = Tile(Terrain::empty, 0);
-      tileArr[2][2] = Tile(Terrain::p1, 0);
+	  if (p == 1) {
+		  tileArr[2][2] = Tile(Terrain::p1, 0);
+	  }
+	  else {
+		  tileArr[2][2] = Tile(Terrain::p2, 0);
+	  }
       tileArr[2][3] = Tile(Terrain::empty, 0);
       tileArr[2][4] = Tile(Terrain::empty, 0);
       tileArr[3][0] = Tile(Terrain::empty, 0);

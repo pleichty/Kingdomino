@@ -165,7 +165,7 @@ int pickTile(SDL_Renderer * renderer, SDL_Texture * bg_texture, int  tileNumbers
 	dominoSelection[3].printDominoForSelection(renderer, 4, textures);
 	//display cursor at tile 1
 	SDL_Rect cursorDestination;
-	cursorDestination.x = 400;
+	cursorDestination.x = 900;
 	cursorDestination.y = 150;
 	cursorDestination.w = 80;
 	cursorDestination.h = 60;
