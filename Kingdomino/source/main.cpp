@@ -174,7 +174,7 @@ int pickTile(SDL_Renderer * renderer, SDL_Texture * bg_texture, int  tileNumbers
 	SDL_RenderPresent(renderer);
 	
 
-	int dominoNumberSelected;
+	int dominoNumberSelected = 1;
 
 	if (firstPlayersTile == 1) {
 		dominoNumberSelected = 2;
@@ -189,25 +189,25 @@ int pickTile(SDL_Renderer * renderer, SDL_Texture * bg_texture, int  tileNumbers
 	{
 		hidScanInput();
 		kdown = hidKeysDown(CONTROLLER_P1_AUTO);
-		if (kdown & KEY_UP && (dominoNumberSelected > 1 && firstPlayersTile != 1) ) {
-			if (dominoNumberSelected == firstPlayersTile) {
-				dominoNumberSelected -= 2;
-				cursorDestination.y -= 200;
-			}
-			else {
+		if (kdown & KEY_UP && (dominoNumberSelected > 1) ) {
+			if (firstPlayersTile != dominoNumberSelected - 1 && dominoNumberSelected > 1) {
 				dominoNumberSelected -= 1;
 				cursorDestination.y -= 100;
 			}
+			else if (dominoNumberSelected - 1 == firstPlayersTile && dominoNumberSelected > 2) {
+				dominoNumberSelected -= 2;
+				cursorDestination.y -= 200;
+			}
 			updateCursorLocation(textures, renderer, bg_texture, dominoSelection, cursorDestination, gameStateManager, player);
 		}
-		if (kdown & KEY_DOWN && (dominoNumberSelected < 4 && firstPlayersTile != 4)) {
-			if (dominoNumberSelected == firstPlayersTile) {
-				dominoNumberSelected += 2;
-				cursorDestination.y += 200;
-			}
-			else {
+		if (kdown & KEY_DOWN && (dominoNumberSelected < 4)) {
+			if (firstPlayersTile != dominoNumberSelected + 1 && dominoNumberSelected < 4) {
 				dominoNumberSelected += 1;
 				cursorDestination.y += 100;
+			}
+			else if (dominoNumberSelected + 1 == firstPlayersTile && dominoNumberSelected < 3) {
+				dominoNumberSelected += 2;
+				cursorDestination.y += 200;
 			}
 			updateCursorLocation(textures, renderer, bg_texture, dominoSelection, cursorDestination, gameStateManager, player);
 		}
@@ -242,7 +242,7 @@ void placeTile(bool &decision_made, SDL_Renderer * renderer, SDL_Texture * bg_te
 
 
 		render_selected_tile(gameStateManager.get_domino_for_player(player), renderer, gameStateManager.get_orientation(), textures);
-		gameStateManager.getBoard1().displayBoard(renderer, textures);
+		gameStateManager.get_board_for_player(player).displayBoard(renderer, textures);
 		gameStateManager.display_overlay(renderer, textures);
 
 		SDL_RenderPresent(renderer);
@@ -260,7 +260,7 @@ void placeTile(bool &decision_made, SDL_Renderer * renderer, SDL_Texture * bg_te
 		if (kdown & KEY_DOWN && ((gameStateManager.getCoordinates1().getYCoordinate() <= 3) && (gameStateManager.getCoordinates2().getYCoordinate() <= 3))) {
 			gameStateManager.move_down();
 		}
-		if (kdown & KEY_A && gameStateManager.getBoard1().can_place_domino(gameStateManager.get_domino_for_player(player), gameStateManager.getCoordinates1(), gameStateManager.getCoordinates2()))
+		if (kdown & KEY_A && gameStateManager.get_board_for_player(player).can_place_domino(gameStateManager.get_domino_for_player(player), gameStateManager.getCoordinates1(), gameStateManager.getCoordinates2()))
 		{
 			gameStateManager.place_domino(gameStateManager.get_domino_for_player(player), gameStateManager.getCoordinates1(), gameStateManager.getCoordinates2());
 			gameStateManager.clear_selections();
@@ -323,6 +323,8 @@ int main(int argc, char** argv)
   //create both boards
   GameStateManager gameStateManager = GameStateManager();
   loadTilePictures(renderer, textures, surfaces);
+
+  int defaultTileChosen = -1;
   while(appletMainLoop())
   {
     hidScanInput();
@@ -331,15 +333,16 @@ int main(int argc, char** argv)
     if(kdown & KEY_PLUS)
       break;
 
-	int firstTilePicked = pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.first_player, 0);
+	int firstTilePicked = pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.first_player, defaultTileChosen);
 	gameStateManager.update_current_player();
 	int secondTilePicked = pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.second_player, firstTilePicked);
 	gameStateManager.update_order(firstTilePicked, secondTilePicked);
+
     while(tileCounter < 48){
 
       //load board, and move new domino around it
 	  placeTile(decision_made, renderer, bg_texture, gameStateManager, textures, gameStateManager.order.first_player, tileCounter, tileNumbers);
-	  firstTilePicked = pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.first_player, 0);
+	  firstTilePicked = pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.first_player, defaultTileChosen);
 	  gameStateManager.update_current_player();
 	  
 	  placeTile(decision_made, renderer, bg_texture, gameStateManager, textures, gameStateManager.order.second_player, tileCounter, tileNumbers);
@@ -352,7 +355,6 @@ int main(int argc, char** argv)
 	
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer, bg_texture, nullptr, nullptr);
-	gameStateManager.getBoard1().displayBoard(renderer, textures);
 	int player1Score = gameStateManager.getBoard1().calculate_score();
 	int player2Score = gameStateManager.getBoard2().calculate_score();
 	std::string player_1_score_text = "score: " + std::to_string(player1Score);
