@@ -224,7 +224,7 @@ int pickTile(SDL_Renderer * renderer, SDL_Texture * bg_texture, int  tileNumbers
 	return dominoNumberSelected;
 }
 
-void placeTile(bool &decision_made, SDL_Renderer * renderer, SDL_Texture * bg_texture, GameStateManager &gameStateManager, SDL_Texture * textures[20], int player, int tileCounter,int  tileNumbers[48])
+void placeTile(SDL_Renderer * renderer, SDL_Texture * bg_texture, GameStateManager &gameStateManager, SDL_Texture * textures[20], int player, int tileCounter,int  tileNumbers[48])
 {
 	u32 kdown = 0x00000000;
 	while (true) {
@@ -299,7 +299,6 @@ int main(int argc, char** argv)
   TTF_Font* font48;
 
   font = TTF_OpenFont("romfs:/resources/fonts/MiniSet2.ttf", 24);
-  font48 = TTF_OpenFont("romfs:/resources/fonts/MiniSet2.ttf", 144);
 
   u32 kdown = 0x00000000;
 
@@ -351,11 +350,11 @@ int main(int argc, char** argv)
     while(tileCounter < 48){
 
       //load board, and move new domino around it
-	  placeTile(decision_made, renderer, bg_texture, gameStateManager, textures, gameStateManager.order.first_player, tileCounter, tileNumbers);
+	  placeTile(renderer, bg_texture, gameStateManager, textures, gameStateManager.order.first_player, tileCounter, tileNumbers);
 	  firstTilePicked = pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.first_player, defaultTileChosen);
 	  gameStateManager.update_current_player();
 	  
-	  placeTile(decision_made, renderer, bg_texture, gameStateManager, textures, gameStateManager.order.second_player, tileCounter, tileNumbers);
+	  placeTile(renderer, bg_texture, gameStateManager, textures, gameStateManager.order.second_player, tileCounter, tileNumbers);
 	  secondTilePicked = pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.second_player, firstTilePicked);
 	  gameStateManager.update_order(firstTilePicked, secondTilePicked);
 
