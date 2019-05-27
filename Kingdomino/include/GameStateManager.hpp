@@ -89,43 +89,24 @@ public:
 
 	void set_domino_for_player(Domino domino, int player)
 	{
-		switch (player) {
-		case 1:
+		if (player == 1) {
 			selected_domino_1 = domino;
-		case 2:
-			selected_domino_2 = domino;
-
-		default:
-			selected_domino_1 = domino;
-			/*
-		case 3:
-			selected_domino_3 = domino;
-		case 4:
-			selected_domino_4 = domino;
 		}
-		*/
+		else if (player == 2) {
+			selected_domino_2 = domino;
 		}
 	}
 
 	Board get_board_for_player(int player) {
-		switch (player) {
-		case 1:
+		if (player == 1) {
 			return board1;
-		case 2:
-			return board2;
-		default:
-			return board1;
-			/*
-		case 3:
-			return nullptr;
-		case 4:
-			return nullptr;
 		}
-		*/
+		else if (player == 2) {
+			return board2;
 		}
 	}
 
-	void display_overlay(SDL_Renderer* renderer, struct SDL_Texture* textures[20])
+	void display_overlay(SDL_Renderer* renderer, struct SDL_Texture* textures[20], int player)
 	{
 		SDL_Rect tile_position_1;
 		tile_position_1.x = x_start + (tile_1_coordinates.getXCoordinate() * 100);
@@ -138,7 +119,7 @@ public:
 		tile_position_2.w = 100;
 		tile_position_2.h = 100;
 
-		if(get_board_for_player(order.current_player).can_place_domino(get_domino_for_player(order.current_player), tile_1_coordinates, tile_2_coordinates))
+		if(get_board_for_player(player).can_place_domino(get_domino_for_player(player), tile_1_coordinates, tile_2_coordinates))
 		{
 			SDL_RenderCopy(renderer, textures[10], nullptr, &tile_position_1);
 			SDL_RenderCopy(renderer, textures[10], nullptr, &tile_position_2);
