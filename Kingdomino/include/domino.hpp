@@ -33,8 +33,8 @@ public:
     }
 
     void printDominoForSelection(SDL_Renderer* renderer, int dominoNumber, SDL_Texture* textures[]){
-        tile1.printTile(renderer, 500, 50 + (dominoNumber * 100), textures);
-        tile2.printTile(renderer, 600, 50 + (dominoNumber * 100), textures);
+        tile1.printTile(renderer, 1000, 50 + (dominoNumber * 100), textures);
+        tile2.printTile(renderer, 1100, 50 + (dominoNumber * 100), textures);
     }
 
 private:
