@@ -232,7 +232,7 @@ void placeTile(SDL_Renderer * renderer, SDL_Texture * bg_texture, GameStateManag
 		SDL_RenderCopy(renderer, bg_texture, nullptr, nullptr);
 
 		//display next tiles on the right side
-		if (tileCounter < 44) {
+		if (tileCounter <= 44) {
 			Domino dominoSelection[4] = {
 		stack[tileNumbers[tileCounter]]
 		,stack[tileNumbers[tileCounter + 1]]
@@ -347,15 +347,19 @@ int main(int argc, char** argv)
 
 
 
-    while(tileCounter < 48){
+    while(tileCounter <= 48){
 
       //load board, and move new domino around it
 	  placeTile(renderer, bg_texture, gameStateManager, textures, gameStateManager.order.first_player, tileCounter, tileNumbers);
-	  firstTilePicked = pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.first_player, defaultTileChosen);
+	  if (tileCounter < 44) {
+		  firstTilePicked = pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.first_player, defaultTileChosen);
+	  }
 	  gameStateManager.update_current_player();
 	  
 	  placeTile(renderer, bg_texture, gameStateManager, textures, gameStateManager.order.second_player, tileCounter, tileNumbers);
-	  secondTilePicked = pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.second_player, firstTilePicked);
+	  if (tileCounter <= 44) {
+		  secondTilePicked = pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.second_player, firstTilePicked);
+	  }
 	  gameStateManager.update_order(firstTilePicked, secondTilePicked);
 
       //start the next round
@@ -366,8 +370,8 @@ int main(int argc, char** argv)
 	SDL_RenderCopy(renderer, bg_texture, nullptr, nullptr);
 	int player1Score = gameStateManager.getBoard1().calculate_score();
 	int player2Score = gameStateManager.getBoard2().calculate_score();
-	std::string player_1_score_text = "score: " + std::to_string(player1Score);
-	std::string player_2_score_text = "score: " + std::to_string(player2Score);
+	std::string player_1_score_text = "Player 1 Score: " + std::to_string(player1Score);
+	std::string player_2_score_text = "Player 2 Score: " + std::to_string(player2Score);
 
 	
 	SDL_Color textColor = { 255, 255, 255, 0 };
