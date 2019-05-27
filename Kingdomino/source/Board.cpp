@@ -65,7 +65,7 @@ bool Board::check_position(int x_coordinate, int y_coordinate, Terrain terrain)
 	}
 	else if(tileArr[x_coordinate][y_coordinate].getTerrain() == terrain 
 		|| tileArr[x_coordinate][y_coordinate].getTerrain() == Terrain::p1
-		|| tileArr[x_coordinate][y_coordinate].getTerrain() == Terrain::p1)
+		|| tileArr[x_coordinate][y_coordinate].getTerrain() == Terrain::p2)
 	{
 		return true;
 	}
