@@ -137,7 +137,7 @@ public:
 		tile_position_2.y = y_start + (tile_2_coordinates.getYCoordinate() * 100);
 		tile_position_2.w = 100;
 		tile_position_2.h = 100;
-		//TODO which board
+
 		if(get_board_for_player(order.current_player).can_place_domino(get_domino_for_player(order.current_player), tile_1_coordinates, tile_2_coordinates))
 		{
 			SDL_RenderCopy(renderer, textures[10], nullptr, &tile_position_1);
@@ -225,6 +225,8 @@ public:
 			order.first_player = order.second_player;
 			order.second_player = firstPlayer;
 		}
+		//set current player back to first player
+		order.current_player = order.first_player;
 	}
 
 	void update_current_player() {
