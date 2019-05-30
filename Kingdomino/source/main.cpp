@@ -13,6 +13,8 @@
 #include <sys/errno.h>
 #include <unistd.h>
 #include <cstdlib>
+#include <functional>
+#include <array>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
@@ -153,11 +155,18 @@ int pickTile(SDL_Renderer * renderer, SDL_Texture * bg_texture, int  tileNumbers
 {
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer, bg_texture, NULL, NULL);
+	std::array<int, 4> sortedDominoNumbers = {
+		tileNumbers[tileCounter]
+		,tileNumbers[tileCounter + 1]
+		,tileNumbers[tileCounter + 2]
+		,tileNumbers[tileCounter + 3]
+	};
+	std::sort(sortedDominoNumbers.begin(), sortedDominoNumbers.end());
 	Domino dominoSelection[4] = {
-		stack[tileNumbers[tileCounter]]
-		,stack[tileNumbers[tileCounter + 1]]
-		,stack[tileNumbers[tileCounter + 2]]
-		,stack[tileNumbers[tileCounter + 3]]
+		stack[sortedDominoNumbers[0]]
+		,stack[sortedDominoNumbers[1]]
+		,stack[sortedDominoNumbers[2]]
+		,stack[sortedDominoNumbers[3]]
 	};
 	dominoSelection[0].printDominoForSelection(renderer, 1, textures);
 	dominoSelection[1].printDominoForSelection(renderer, 2, textures);
@@ -233,11 +242,18 @@ void placeTile(SDL_Renderer * renderer, SDL_Texture * bg_texture, GameStateManag
 
 		//display next tiles on the right side
 		if (tileCounter <= 44) {
+			std::array<int, 4> sortedDominoNumbers = {
+				tileNumbers[tileCounter]
+				,tileNumbers[tileCounter + 1]
+				,tileNumbers[tileCounter + 2]
+				,tileNumbers[tileCounter + 3]
+			};
+			std::sort(sortedDominoNumbers.begin(), sortedDominoNumbers.end());
 			Domino dominoSelection[4] = {
-		stack[tileNumbers[tileCounter]]
-		,stack[tileNumbers[tileCounter + 1]]
-		,stack[tileNumbers[tileCounter + 2]]
-		,stack[tileNumbers[tileCounter + 3]]
+				stack[sortedDominoNumbers[0]]
+				,stack[sortedDominoNumbers[1]]
+				,stack[sortedDominoNumbers[2]]
+				,stack[sortedDominoNumbers[3]]
 			};
 			dominoSelection[0].printDominoForSelection(renderer, 1, textures);
 			dominoSelection[1].printDominoForSelection(renderer, 2, textures);
