@@ -92,15 +92,16 @@ void loadTilePictures(SDL_Renderer* renderer, SDL_Texture* textures[], SDL_Surfa
   surfaces[9] = IMG_Load("romfs:/resources/images/mineTile0.png");
   surfaces[10] = IMG_Load("romfs:/resources/images/mineTile1.png");
   surfaces[11] = IMG_Load("romfs:/resources/images/mineTile2.png");
-  surfaces[12] = IMG_Load("romfs:/resources/images/swampTile0.png");
-  surfaces[13] = IMG_Load("romfs:/resources/images/swampTile1.png");
-  surfaces[14] = IMG_Load("romfs:/resources/images/swampTile2.png");
-  surfaces[15] = IMG_Load("romfs:/resources/images/cursor.png");
-  surfaces[16] = IMG_Load("romfs:/resources/images/startingTile1.png");
-  surfaces[17] = IMG_Load("romfs:/resources/images/startingTile2.png");
-  surfaces[18] = IMG_Load("romfs:/resources/images/overlay_green.png");
-  surfaces[19] = IMG_Load("romfs:/resources/images/overlay_red.png");
-  surfaces[20] = IMG_Load("romfs:/resources/images/empty_tile.png");
+  surfaces[12] = IMG_Load("romfs:/resources/images/mineTile3.png");
+  surfaces[13] = IMG_Load("romfs:/resources/images/swampTile0.png");
+  surfaces[14] = IMG_Load("romfs:/resources/images/swampTile1.png");
+  surfaces[15] = IMG_Load("romfs:/resources/images/swampTile2.png");
+  surfaces[16] = IMG_Load("romfs:/resources/images/cursor.png");
+  surfaces[17] = IMG_Load("romfs:/resources/images/startingTile1.png");
+  surfaces[18] = IMG_Load("romfs:/resources/images/startingTile2.png");
+  surfaces[19] = IMG_Load("romfs:/resources/images/overlay_green.png");
+  surfaces[20] = IMG_Load("romfs:/resources/images/overlay_red.png");
+  surfaces[21] = IMG_Load("romfs:/resources/images/empty_tile.png");
   textures[0] = SDL_CreateTextureFromSurface(renderer, surfaces[0]);
   textures[1] = SDL_CreateTextureFromSurface(renderer, surfaces[1]);
   textures[2] = SDL_CreateTextureFromSurface(renderer, surfaces[2]);
@@ -122,8 +123,9 @@ void loadTilePictures(SDL_Renderer* renderer, SDL_Texture* textures[], SDL_Surfa
   textures[18] = SDL_CreateTextureFromSurface(renderer, surfaces[18]);
   textures[19] = SDL_CreateTextureFromSurface(renderer, surfaces[19]);
   textures[20] = SDL_CreateTextureFromSurface(renderer, surfaces[20]);
+  textures[21] = SDL_CreateTextureFromSurface(renderer, surfaces[21]);
 
-  for (int i = 0; i < 20; i++) {
+  for (int i = 0; i < 21; i++) {
 	  SDL_FreeSurface(surfaces[i]);
   }
 }
@@ -136,7 +138,7 @@ void updateCursorLocation(SDL_Texture* textures[25], SDL_Renderer* renderer, SDL
 	dominoSelection[1].printDominoForSelection(renderer, 2, textures);
 	dominoSelection[2].printDominoForSelection(renderer, 3, textures);
 	dominoSelection[3].printDominoForSelection(renderer, 4, textures);
-	SDL_RenderCopy(renderer, textures[15], nullptr, &cursorDestination);
+	SDL_RenderCopy(renderer, textures[16], nullptr, &cursorDestination);
 	gameStateManager.get_board_for_player(player).displayBoard(renderer, textures);
 	SDL_RenderPresent(renderer);
 }
@@ -193,7 +195,7 @@ int pickTile(SDL_Renderer * renderer, SDL_Texture * bg_texture, int  tileNumbers
 	cursorDestination.x = 900;
 	cursorDestination.w = 80;
 	cursorDestination.h = 60;
-	SDL_RenderCopy(renderer, textures[15], nullptr, &cursorDestination);
+	SDL_RenderCopy(renderer, textures[16], nullptr, &cursorDestination);
 	gameStateManager.get_board_for_player(player).displayBoard(renderer, textures);
 	SDL_RenderPresent(renderer);
 	

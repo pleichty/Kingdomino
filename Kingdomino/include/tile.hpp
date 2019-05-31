@@ -63,16 +63,16 @@ public:
         return textures[9 + crownCount];
       }
       else if(terrain == Terrain::swamp){
-        return textures[12 + crownCount];
+        return textures[13 + crownCount];
       }
       else if(terrain == Terrain::p1){
-        return textures[16];
-      }
-      else if(terrain == Terrain::p2){
         return textures[17];
       }
+      else if(terrain == Terrain::p2){
+        return textures[18];
+      }
       else{
-        return textures[20];
+        return textures[21];
       }
     }
 

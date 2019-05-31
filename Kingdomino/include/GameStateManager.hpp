@@ -121,13 +121,13 @@ public:
 
 		if(get_board_for_player(player).can_place_domino(get_domino_for_player(player), tile_1_coordinates, tile_2_coordinates))
 		{
-			SDL_RenderCopy(renderer, textures[18], nullptr, &tile_position_1);
-			SDL_RenderCopy(renderer, textures[18], nullptr, &tile_position_2);
+			SDL_RenderCopy(renderer, textures[19], nullptr, &tile_position_1);
+			SDL_RenderCopy(renderer, textures[19], nullptr, &tile_position_2);
 		}
 		else
 		{
-			SDL_RenderCopy(renderer, textures[19], nullptr, &tile_position_1);
-			SDL_RenderCopy(renderer, textures[19], nullptr, &tile_position_2);
+			SDL_RenderCopy(renderer, textures[20], nullptr, &tile_position_1);
+			SDL_RenderCopy(renderer, textures[20], nullptr, &tile_position_2);
 		}
 	}
 
