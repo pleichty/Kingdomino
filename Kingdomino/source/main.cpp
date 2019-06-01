@@ -345,7 +345,7 @@ int main(int argc, char** argv)
   int tileNumbers[48];
 
   for(int i = 0; i<48;i++){
-    tileNumbers[i] = i + 1;
+    tileNumbers[i] = i;
   }
 
   //shuffle up the tile numbers
