@@ -21,6 +21,9 @@ class Tile
 public:
 
     Tile(){
+		crownCount = 0;
+		discovered = false;
+		terrain = Terrain::empty;
     }
 
     Tile(Terrain t, int cc){
@@ -46,33 +49,44 @@ public:
 	}
 
     SDL_Texture* getTextureforTile(SDL_Renderer* renderer, SDL_Texture* textures[]){
+		
       if(terrain == Terrain::grass){
-        return textures[0];
+        return textures[0 + crownCount];
       }
-      else if(terrain == Terrain::forest){
-        return textures[1];
+	  
+	  else if(terrain == Terrain::forest && crownCount == 0){
+        return textures[3 + crownCount];
       }
+	  
+	  else if (terrain == Terrain::forest && crownCount == 1) {
+		  return textures[4];
+	  }
+	  
       else if(terrain == Terrain::wheat){
-        return textures[2];
+        return textures[5 + crownCount];
       }
+	  
       else if(terrain == Terrain::water){
-        return textures[3];
+        return textures[7 + crownCount];
       }
+	  
       else if(terrain == Terrain::mine){
-        return textures[4];
+        return textures[9 + crownCount];
       }
       else if(terrain == Terrain::swamp){
-        return textures[5];
+        return textures[13 + crownCount];
       }
       else if(terrain == Terrain::p1){
-        return textures[7];
+        return textures[17];
       }
       else if(terrain == Terrain::p2){
-        return textures[8];
+        return textures[18];
       }
+	  
       else{
-        return textures[12];
+        return textures[21];
       }
+
     }
 
     void printTile(SDL_Renderer* renderer,int x, int y, SDL_Texture* textures[]){
@@ -82,24 +96,8 @@ public:
       tileDestination.w = 100;
       tileDestination.h = 100;
 
-	  SDL_Rect crownDestination;
-	  crownDestination.x = x + 75;
-	  crownDestination.y = y;
-	  crownDestination.w = 25;
-	  crownDestination.h = 25;
-
-
       // Copy bg texture to renderer:
       SDL_RenderCopy(renderer, getTextureforTile(renderer, textures), NULL, &tileDestination);
-	  if (crownCount == 1) {
-		  SDL_RenderCopy(renderer, textures[13], NULL, &crownDestination);
-	  }
-	  else if (crownCount == 2) {
-		  SDL_RenderCopy(renderer, textures[14], NULL, &crownDestination);
-	  }
-	  else if (crownCount == 3) {
-		  SDL_RenderCopy(renderer, textures[15], NULL, &crownDestination);
-	  }
   }
 
     Terrain terrain;
