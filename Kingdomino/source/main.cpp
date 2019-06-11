@@ -379,7 +379,7 @@ int main(int argc, char** argv)
 
       //load board, and move new domino around it
 	  placeTile(renderer, bg_texture, gameStateManager, textures, gameStateManager.order.first_player, tileCounter, tileNumbers);
-	  if (tileCounter < 44) {
+	  if (tileCounter <= 44) {
 		  firstTilePicked = pickTile(renderer, bg_texture, tileNumbers, tileCounter, textures, gameStateManager, gameStateManager.order.first_player, defaultTileChosen);
 	  }
 	  gameStateManager.update_current_player();
